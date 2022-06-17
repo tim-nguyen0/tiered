@@ -42,5 +42,7 @@
   "tiered:revenant.label": "Revenant",
 
   "text.autoconfig.tiered.title": "Tiered Config",
-  "text.autoconfig.tiered.option.lootContainerModifier": "Loot Container Modifier"
+  "text.autoconfig.tiered.option.lootContainerModifier": "Loot Container Modifier",
+
+  "container.reforge": "Reforge Gear"
 }

@@ -7,6 +7,8 @@ import draylar.tiered.api.TieredItemTags;
 import draylar.tiered.config.ConfigInit;
 import draylar.tiered.api.PotentialAttribute;
 import draylar.tiered.data.AttributeDataLoader;
+import draylar.tiered.network.TieredServerPacket;
+import draylar.tiered.reforge.ReforgeScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -21,8 +23,12 @@ import net.minecraft.item.ShieldItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class Tiered implements ModInitializer {
 
     /**
@@ -38,6 +45,9 @@ public class Tiered implements ModInitializer {
      * This field is registered to the server's data manager in {@link ServerResourceManagerMixin}
      */
     public static final AttributeDataLoader ATTRIBUTE_DATA_LOADER = new AttributeDataLoader();
+
+    public static ScreenHandlerType<ReforgeScreenHandler> REFORGE_SCREEN_HANDLER_TYPE;
+    // public static final ScreenHandlerType<ReforgeScreenHandler> REFORGE_SCREEN_HANDLER_TYPE = ScreenHandlerType.register("smithing", ReforgeScreenHandler::new);
 
     public static final UUID[] MODIFIERS = new UUID[] { UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"),
             UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150"), UUID.fromString("4a88bc27-9563-4eeb-96d5-fe50917cc24f"),
@@ -56,6 +66,11 @@ public class Tiered implements ModInitializer {
         CustomEntityAttributes.init();
         registerAttributeSyncer();
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(Tiered.ATTRIBUTE_DATA_LOADER);
+
+        REFORGE_SCREEN_HANDLER_TYPE = Registry.register(Registry.SCREEN_HANDLER, "tiered",
+                new ScreenHandlerType<>((syncId, inventory) -> new ReforgeScreenHandler(syncId, inventory, ScreenHandlerContext.EMPTY)));
+
+        TieredServerPacket.init();
         // if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
         // // setupModifierLabel();
         // }

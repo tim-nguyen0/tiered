@@ -11,4 +11,7 @@ public class TieredConfig implements ConfigData {
     @Comment("Items in for example mineshaft chests get modifiers")
     public boolean lootContainerModifier = true;
 
+    public int xIconPosition = 0;
+    public int yIconPosition = 0;
+
 }

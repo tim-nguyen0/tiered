@@ -2,8 +2,11 @@ package draylar.tiered;
 
 import draylar.tiered.api.PotentialAttribute;
 import draylar.tiered.data.AttributeDataLoader;
+import draylar.tiered.network.TieredClientPacket;
+import draylar.tiered.reforge.ReforgeScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -17,6 +20,11 @@ public class TieredClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         registerAttributeSyncHandler();
+        // HandledScreens.<QuestScreenHandler, QuestScreen>register(VillagerQuestsMain.QUEST_SCREEN_HANDLER_TYPE, (handler, inventory, title) -> new QuestScreen(handler, inventory.player, title));
+        // HandledScreens.<ReforgeScreenHandler, ReforgeScreen>register(Tiered.REFORGE_SCREEN_HANDLER_TYPE, (handler, inventory, title) -> new ReforgeScreen(handler, inventory.player, title));
+        // HandledScreens.<ReforgeScreenHandler, ReforgeScreen>register(Tiered.REFORGE_SCREEN_HANDLER_TYPE, (handler, inventory, title) -> new ReforgeScreen(handler, inventory, title));
+        HandledScreens.register(Tiered.REFORGE_SCREEN_HANDLER_TYPE, ReforgeScreen::new);
+        TieredClientPacket.init();
     }
 
     public static void registerAttributeSyncHandler() {
@@ -27,7 +35,7 @@ public class TieredClient implements ClientModInitializer {
 
             // for each id/attribute pair, load it
             int size = packet.readInt();
-            for(int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 Identifier id = new Identifier(packet.readString());
                 PotentialAttribute pa = AttributeDataLoader.GSON.fromJson(packet.readString(), PotentialAttribute.class);
                 Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().put(id, pa);

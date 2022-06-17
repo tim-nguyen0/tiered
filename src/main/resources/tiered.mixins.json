@@ -12,10 +12,13 @@
     "TridentEntityMixin",
     "SpectralArrowEntityMixin",
     "FabricItemMixin",
-    "LootTableMixin"
+    "LootTableMixin",
+    "AnvilScreenHandlerMixin"
   ],
   "client": [
-    "client.ItemStackClientMixin"
+    "client.ItemStackClientMixin",
+    "client.AnvilScreenMixin",
+    "client.MouseMixin"
   ],
   "injectors": {
     "defaultRequire": 1

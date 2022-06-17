@@ -55,19 +55,26 @@
             "index": 6,
             "startColor": "#5C4C2D",
             "endColor": "#5C4C2D",
-            "selectors": []
+            "selectors": [
+                "&Tiered={Tier:\"tiered:unique\"}"
+            ]
         },
         {
             "index": 7,
-            "startColor": "#705A87",
-            "endColor": "#393556",
-            "selectors": []
+            "startColor": "#1C265E",
+            "endColor": "#1C265E",
+            "selectors": [
+                "&Tiered={Tier:\"tiered:lucky\"}",
+                "&Tiered={Tier:\"tiered:unlucky\"}"
+            ]
         },
         {
-            "index": 8,
-            "startColor": "#7D8A91",
-            "endColor": "#7D8A91",
-            "selectors": []
+            "index": 14,
+            "startColor": "#100110",
+            "endColor": "#100110",
+            "selectors": [
+                "%Pois1x's"
+            ]
         },
         {
             "index": 9,

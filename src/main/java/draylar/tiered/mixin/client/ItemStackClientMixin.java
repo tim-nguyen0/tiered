@@ -2,7 +2,6 @@ package draylar.tiered.mixin.client;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Ordering;
 import draylar.tiered.Tiered;
 import draylar.tiered.api.PotentialAttribute;
 import net.fabricmc.api.EnvType;
@@ -29,10 +28,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 @Environment(EnvType.CLIENT)
 @Mixin(ItemStack.class)
 public abstract class ItemStackClientMixin {
