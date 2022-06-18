@@ -3,8 +3,8 @@
     "generic.crit_chance": "暴击几率",
     "generic.durable": "耐久",
     "generic.range_attack_damage": "射击距离",
-	"generic.attack_range": "攻击范围",
-	"generic.reach": "触及半径",
+    "generic.attack_range": "攻击范围",
+    "generic.reach": "触及半径",
   
     "tiered:common.label": "普通",
     "tiered:uncommon.label": "不凡",
