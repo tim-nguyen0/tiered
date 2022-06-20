@@ -6,13 +6,8 @@ import draylar.tiered.config.ConfigInit;
 import draylar.tiered.network.TieredClientPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ingame.AnvilScreen;
-import net.minecraft.client.gui.screen.ingame.BeaconScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.ingame.SmithingScreen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.PressableWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,23 +16,45 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 @Environment(EnvType.CLIENT)
 public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen<T> implements ScreenHandlerListener {
 
     public static final Identifier TEXTURE = new Identifier("tiered", "textures/gui/reforging_screen.png");
+    private ReforgeScreen<T>.ReforgeButton reforgeButton;
 
     public ReforgeScreen(T handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title);
         this.titleX = 60;
         TieredClientPacket.writeC2SSyncPosPacket(false);
+
+        // System.out.println(this.reforgeButton + ": "+this.getdr);
+
     }
 
     @Override
     protected void init() {
         super.init();
         ((ReforgeScreenHandler) this.handler).addListener(this);
+
+        int i = (this.width - this.backgroundWidth) / 2;
+        int j = (this.height - this.backgroundHeight) / 2;
+        this.reforgeButton = (ReforgeScreen<T>.ReforgeButton) this.addDrawableChild(new ReforgeScreen.ReforgeButton(i + 79, j + 56, (button) -> {
+            if (button instanceof ReforgeScreen.ReforgeButton) {
+                System.out.println(((ReforgeScreenHandler) this.handler).reforgeReady);
+                // ((((ReforgeScreenHandler) this.handler).getSlot(0).hasStack()
+                // System.out.println("PRESSED!");
+                // if(((ReforgeScreen.ReforgeButton)button).disabled)
+
+                // if (this.acceptedQuestIdList.contains(this.selectedQuest.getQuestId()) && this.selectedQuest.canCompleteQuest(this.playerEntity))
+                // this.completeQuest();
+                // else
+                // this.acceptQuest();
+            }
+        }));
     }
 
     @Override
@@ -56,6 +73,7 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
     }
 
     // protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    // this.reforgeButton.render(matrices, mouseX, mouseY, delta);
     // }
 
     @Override
@@ -66,16 +84,25 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
         this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
+
         // this.drawTexture(matrices, i + 59, j + 20, 0, this.backgroundHeight + (((ReforgeScreenHandler) this.handler).getSlot(0).hasStack() ? 0 : 16), 110, 16);
         // if ((((ReforgeScreenHandler) this.handler).getSlot(0).hasStack() || ((ReforgeScreenHandler) this.handler).getSlot(1).hasStack())
         // && !((ReforgeScreenHandler) this.handler).getSlot(2).hasStack()) {
         // this.drawTexture(matrices, i + 99, j + 45, this.backgroundWidth, 0, 28, 21);
         // }
 
-        if (this.isPointWithinBounds(6 + ConfigInit.CONFIG.xIconPosition, -17 + ConfigInit.CONFIG.yIconPosition, 20, 20, (double) mouseX, (double) mouseY))
-            ReforgeScreen.drawTexture(matrices, i + 6 + ConfigInit.CONFIG.xIconPosition, j - 17 + ConfigInit.CONFIG.yIconPosition, 236, 0, 20, 18, 256, 256);
-        else
-            ReforgeScreen.drawTexture(matrices, i + 6 + ConfigInit.CONFIG.xIconPosition, j - 17 + ConfigInit.CONFIG.yIconPosition, 216, 0, 20, 18, 256, 256);
+        // System.out.println(this.reforgeButton.visible);
+
+        // anvil icon
+        this.drawTexture(matrices, this.x + ConfigInit.CONFIG.xIconPosition, this.y - 21 + ConfigInit.CONFIG.yIconPosition, 24, 166, 24, 25);
+        // reforge icon
+        this.drawTexture(matrices, this.x + 25 + ConfigInit.CONFIG.xIconPosition, this.y - 23 + ConfigInit.CONFIG.yIconPosition, 72, 166, 24, 27);
+
+        if (this.isPointWithinBounds(0 + ConfigInit.CONFIG.xIconPosition, -21 + ConfigInit.CONFIG.yIconPosition, 24, 21, (double) mouseX, (double) mouseY))
+            this.renderTooltip(matrices, new TranslatableText("container.repair"), mouseX, mouseY);
+
+        // this.reforgeButton.render(matrices, mouseX, mouseY, delta);
+        // this.reforgeButton.renderButton(matrices, mouseX, mouseY, delta);
     }
 
     @Override
@@ -88,7 +115,7 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isPointWithinBounds(6 + ConfigInit.CONFIG.xIconPosition, -17 + ConfigInit.CONFIG.yIconPosition, 20, 18, (double) mouseX, (double) mouseY))
+        if (this.client != null && this.isPointWithinBounds(0 + ConfigInit.CONFIG.xIconPosition, -21 + ConfigInit.CONFIG.yIconPosition, 24, 21, (double) mouseX, (double) mouseY))
             TieredClientPacket.writeC2SScreenPacket(handler.pos, (int) this.client.mouse.getX(), (int) this.client.mouse.getY(), false);
 
         return super.mouseClicked(mouseX, mouseY, button);
@@ -112,19 +139,12 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
     // }
     // }
 
-    private class IconButtonWidget extends PressableWidget {
-        // private final int x;
-        // private final int v;
+    private class ReforgeButton extends ButtonWidget {
         private boolean disabled;
 
-        // protected IconButtonWidget(int x, int y, int u, int v, Text message) {
-        // super(x, y, message);
-        // this.u = u;
-        // this.v = v;
-        // }
-
-        public IconButtonWidget(int x, int y) {
-            super(x, y, 90, 220, LiteralText.EMPTY);
+        public ReforgeButton(int x, int y, ButtonWidget.PressAction onPress) {
+            super(x, y, 18, 18, LiteralText.EMPTY, onPress);
+            this.disabled = true;
         }
 
         @Override
@@ -132,59 +152,90 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, TEXTURE);
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-            // int i = 219;
-            int j = 0;
-            if (!this.active) {
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.enableDepthTest();
+            int j = 176;
+            if (this.disabled) {
                 j += this.width * 2;
-            } else if (this.disabled) {
-                j += this.width * 1;
             } else if (this.isHovered()) {
-                j += this.width * 3;
+                j += this.width;
             }
-            this.drawTexture(matrices, this.x, this.y, j, 219, this.width, this.height);
-            // this.renderExtra(matrices);
+            this.drawTexture(matrices, this.x, this.y, j, 0, this.width, this.height);
         }
-
-        // @Override
-        // protected void renderExtra(MatrixStack matrices) {
-        // this.drawTexture(matrices, this.x + 2, this.y + 2, this.u, this.v, 18, 18);
-        // }
-
-        public boolean isDisabled() {
-            return this.disabled;
-        }
-
-        public void setDisabled(boolean disabled) {
-            this.disabled = disabled;
-        }
-
-        @Override
-        public void appendNarrations(NarrationMessageBuilder var1) {
-            // TODO Auto-generated method stub
-
-        }
-
-        @Override
-        public void onPress() {
-            System.out.println("TEST");
-        }
-
-        // @Override
-        // public boolean shouldRenderTooltip() {
-        // return this.hovered;
-        // }
-
-        // @Override
-        // public void appendNarrations(NarrationMessageBuilder builder) {
-        // this.appendDefaultNarrations(builder);
-        // }
-
-        // @Override
-        // public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        // BeaconScreen.this.renderTooltip(matrices, BeaconScreen.this.title, mouseX, mouseY);
-        // }
 
     }
+
+    // private class IconButtonWidget extends PressableWidget {
+    // // private final int x;
+    // // private final int v;
+    // private boolean disabled;
+
+    // // protected IconButtonWidget(int x, int y, int u, int v, Text message) {
+    // // super(x, y, message);
+    // // this.u = u;
+    // // this.v = v;
+    // // }
+
+    // public IconButtonWidget(int x, int y) {
+    // super(x, y, 18, 18, LiteralText.EMPTY);
+    // }
+
+    // @Override
+    // public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    // RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    // RenderSystem.setShaderTexture(0, TEXTURE);
+    // RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+    // int j = 176;
+    // if (this.isHovered()) {
+    // j += this.width * 2;
+    // } else if (this.disabled) {
+    // j += this.width * 3;
+    // }
+    // this.drawTexture(matrices, this.x, this.y, j, 0, this.width, this.height);
+    // // this.renderExtra(matrices);
+    // }
+
+    // // @Override
+    // // protected void renderExtra(MatrixStack matrices) {
+    // // this.drawTexture(matrices, this.x + 2, this.y + 2, this.u, this.v, 18, 18);
+    // // }
+
+    // public boolean isDisabled() {
+    // return this.disabled;
+    // }
+
+    // public void setDisabled(boolean disabled) {
+    // this.disabled = disabled;
+    // }
+
+    // @Override
+    // public void appendNarrations(NarrationMessageBuilder var1) {
+    // // TODO Auto-generated method stub
+
+    // }
+
+    // @Override
+    // public void onPress() {
+    // System.out.println("TEST");
+    // }
+
+    // // @Override
+    // // public boolean shouldRenderTooltip() {
+    // // return this.hovered;
+    // // }
+
+    // // @Override
+    // // public void appendNarrations(NarrationMessageBuilder builder) {
+    // // this.appendDefaultNarrations(builder);
+    // // }
+
+    // // @Override
+    // // public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
+    // // BeaconScreen.this.renderTooltip(matrices, BeaconScreen.this.title, mouseX, mouseY);
+    // // }
+
+    // }
 
     // static abstract class BaseButtonWidget extends PressableWidget implements BeaconButtonWidget {
     // private boolean disabled;

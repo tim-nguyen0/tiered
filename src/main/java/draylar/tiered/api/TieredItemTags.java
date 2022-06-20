@@ -19,6 +19,8 @@ public class TieredItemTags {
     // public static final TagKey<Item> HOES = register("hoes");
     // public static final TagKey<Item> AXES = register("axes");
 
+    public static final TagKey<Item> REFORGE_ADDITION = register("reforge_addition");
+
     private TieredItemTags() {
     }
 
@@ -26,6 +28,6 @@ public class TieredItemTags {
     }
 
     private static TagKey<Item> register(String id) {
-        return TagKey.of(Registry.ITEM_KEY, new Identifier("fabric", id));
+        return TagKey.of(Registry.ITEM_KEY, new Identifier("tiered", id));
     }
 }

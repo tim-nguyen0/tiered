@@ -23,6 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -47,29 +48,21 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.drawBackground(matrices, delta, mouseX, mouseY);
 
-        int i = (this.width - this.backgroundWidth) / 2;
-        int j = (this.height - this.backgroundHeight) / 2;
-
         RenderSystem.setShaderTexture(0, ReforgeScreen.TEXTURE);
+        // anvil icon
+        this.drawTexture(matrices, this.x + ConfigInit.CONFIG.xIconPosition, this.y - 23 + ConfigInit.CONFIG.yIconPosition, 0, 166, 24, 27);
+        // reforge icon
+        this.drawTexture(matrices, this.x + 25 + ConfigInit.CONFIG.xIconPosition, this.y - 21 + ConfigInit.CONFIG.yIconPosition, 48, 166, 24, 21);
 
-        // // bag icon
-        // this.drawTexture(matrices, this.x, this.y - 23, 0, 110, 24, 27);
-        // // skill icon
-        // this.drawTexture(matrices, this.x + 25, this.y - 21, 48, 110, 24, 21);
-
-        // if (this.isPointWithinBounds(26, -20, 22, 19, (double) mouseX, (double) mouseY))
-        // this.renderTooltip(matrices, Text.translatable("screen.levelz.skill_screen"), mouseX, mouseY);
-
-        if (this.isPointWithinBounds(6 + ConfigInit.CONFIG.xIconPosition, -17 + ConfigInit.CONFIG.yIconPosition, 20, 20, (double) mouseX, (double) mouseY))
-            AnvilScreenMixin.drawTexture(matrices, i + 6 + ConfigInit.CONFIG.xIconPosition, j - 17 + ConfigInit.CONFIG.yIconPosition, 196, 0, 20, 18, 256, 256);
-        else
-            AnvilScreenMixin.drawTexture(matrices, i + 6 + ConfigInit.CONFIG.xIconPosition, j - 17 + ConfigInit.CONFIG.yIconPosition, 176, 0, 20, 18, 256, 256);
+        if (this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
+            this.renderTooltip(matrices, new TranslatableText("screen.tiered.reforging_screen"), mouseX, mouseY);
 
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isPointWithinBounds(6 + ConfigInit.CONFIG.xIconPosition, -17 + ConfigInit.CONFIG.yIconPosition, 20, 18, (double) mouseX, (double) mouseY))
+        if (this.client != null && this.focusedSlot == null
+                && this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
             TieredClientPacket.writeC2SScreenPacket(((AnvilScreenHandlerAccess) handler).getPos(), (int) this.client.mouse.getX(), (int) this.client.mouse.getY(), true);
 
         return super.mouseClicked(mouseX, mouseY, button);

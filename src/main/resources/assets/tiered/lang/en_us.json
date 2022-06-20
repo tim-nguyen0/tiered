@@ -43,6 +43,9 @@
 
   "text.autoconfig.tiered.title": "Tiered Config",
   "text.autoconfig.tiered.option.lootContainerModifier": "Loot Container Modifier",
+  "text.autoconfig.tiered.option.xIconPosition": "Icon X Position",
+  "text.autoconfig.tiered.option.yIconPosition": "Icon Y Position",
 
-  "container.reforge": "Reforge Gear"
+  "container.reforge": "Reforge Gear",
+  "screen.tiered.reforging_screen": "Reforge Gear"
 }

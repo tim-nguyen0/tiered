@@ -20,10 +20,17 @@ import net.minecraft.world.WorldEvents;
 import org.jetbrains.annotations.Nullable;
 
 import draylar.tiered.Tiered;
+import draylar.tiered.api.TieredItemTags;
 
 public class ReforgeScreenHandler extends ScreenHandler {
 
-    private final Inventory inventory = new SimpleInventory(3);
+    private final Inventory inventory = new SimpleInventory(3) {
+        @Override
+        public void markDirty() {
+            super.markDirty();
+            ReforgeScreenHandler.this.onContentChanged(this);
+        }
+    };
     // protected final CraftingResultInventory output = new CraftingResultInventory();
     // protected final Inventory inventory = new SimpleInventory(3) {
 
@@ -36,6 +43,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
     private final ScreenHandlerContext context;
     private final PlayerEntity player;
     public BlockPos pos;
+    public boolean reforgeReady;
 
     // protected abstract boolean canTakeOutput(PlayerEntity var1, boolean var2);
 
@@ -52,15 +60,14 @@ public class ReforgeScreenHandler extends ScreenHandler {
 
         this.context = context;
         this.player = playerInventory.player;
-        this.addSlot(new Slot(this.inventory, 0, 27, 47));
-        this.addSlot(new Slot(this.inventory, 1, 76, 47));
-        this.addSlot(new Slot(this.inventory, 2, 134, 47));
-        // {
-
-        // @Override
-        // public boolean canInsert(ItemStack stack) {
-        // return false;
-        // }
+        this.addSlot(new Slot(this.inventory, 0, 45, 47));
+        this.addSlot(new Slot(this.inventory, 1, 80, 34));
+        this.addSlot(new Slot(this.inventory, 2, 115, 47) {
+            @Override
+            public boolean canInsert(ItemStack stack) {
+                return stack.isIn(TieredItemTags.REFORGE_ADDITION);
+            }
+        });
 
         // // @Override
         // // public boolean canTakeItems(PlayerEntity playerEntity) {
@@ -88,19 +95,27 @@ public class ReforgeScreenHandler extends ScreenHandler {
 
     // public abstract void updateResult();
 
-    // @Override
-    // public void onContentChanged(Inventory inventory) {
-    // super.onContentChanged(inventory);
-    // if (inventory == this.input) {
-    // // this.updateResult();
-    // }
-    // }
+    @Override
+    public void onContentChanged(Inventory inventory) {
+        super.onContentChanged(inventory);
+        if (inventory == this.inventory) {
+            this.updateResult();
+        }
+
+    }
+
+    private void updateResult() {
+        if (this.getSlot(2).hasStack()) {
+            // if(this.getSlot(1).g)
+            this.reforgeReady = true;
+        }
+
+    }
 
     @Override
     public void close(PlayerEntity player) {
         super.close(player);
-
-        // this.context.run((world, pos) -> this.dropInventory(player, this.input));
+        this.context.run((world, pos) -> this.dropInventory(player, this.inventory));
     }
 
     @Override
