@@ -1,6 +1,7 @@
 package draylar.tiered.api;
 
 import draylar.tiered.Tiered;
+import draylar.tiered.config.ConfigInit;
 import draylar.tiered.util.SortList;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,13 +33,18 @@ public class ModifierUtils {
         // collect all valid attributes for the given item and their weights
 
         Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().forEach((id, attribute) -> {
-            if (attribute.isValid(Registry.ITEM.getId(item)) && attribute.getWeight() > 0) {
+            if (attribute.isValid(Registry.ITEM.getId(item)) && (attribute.getWeight() > 0 || reforge)) {
                 potentialAttributes.add(new Identifier(attribute.getID()));
-                attributeWeights.add(attribute.getWeight());
+                attributeWeights.add(reforge ? attribute.getWeight() + 1 : attribute.getWeight());
             }
         });
-
-        // return a random attribute if there are any, or null if there are none
+        if (reforge && attributeWeights.size() > 2) {
+            SortList.concurrentSort(attributeWeights, attributeWeights, potentialAttributes);
+            int maxWeight = attributeWeights.get(attributeWeights.size() - 1);
+            for (int i = 0; i < attributeWeights.size(); i++)
+                if (attributeWeights.get(i) > maxWeight / 2)
+                    attributeWeights.set(i, (int) (attributeWeights.get(i) * ConfigInit.CONFIG.reforge_modifier));// * attributeWeights;
+        }
         if (potentialAttributes.size() > 0) {
             int totalWeight = 0;
             for (Integer weight : attributeWeights)
@@ -57,7 +63,6 @@ public class ModifierUtils {
             return null;
     }
 
-    // Set on
     public static void setItemStackAttribute(ItemStack stack, boolean reforge) {
         if (stack.getSubNbt(Tiered.NBT_SUBTAG_KEY) == null) {
 
@@ -75,7 +80,7 @@ public class ModifierUtils {
                     if (attributeList.get(i).getAttributeTypeID().equals("tiered:generic.durable")) {
                         if (nbtMap == null)
                             nbtMap = new HashMap<String, Object>();
-                        nbtMap.put("durable", attributeList.get(i).getEntityAttributeModifier().getValue());
+                        nbtMap.put("durable", (double) Math.round(attributeList.get(i).getEntityAttributeModifier().getValue() * 100.0) / 100.0);
                         break;
                     }
                 // add nbtMap
@@ -96,12 +101,38 @@ public class ModifierUtils {
                             if ((double) value % 1.0 < 0.0001D)
                                 nbtCompound.putInt(key, (int) Math.round((double) value));
                             else
-                                nbtCompound.putDouble(key, (double) value);
+                                nbtCompound.putDouble(key, Math.round((double) value * 100.0) / 100.0);
                         }
                     }
                     stack.setNbt(nbtCompound);
                 }
             }
+        }
+    }
+
+    public static void removeItemStackAttribute(ItemStack itemStack) {
+        if (itemStack.hasNbt() && itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) != null) {
+
+            Identifier tier = new Identifier(itemStack.getOrCreateSubNbt(Tiered.NBT_SUBTAG_KEY).getString(Tiered.NBT_SUBTAG_DATA_KEY));
+
+            HashMap<String, Object> nbtMap = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier).getNbtValues();
+            List<String> nbtKeys = new ArrayList<String>();
+            if (nbtMap != null)
+                nbtKeys.addAll(nbtMap.keySet().stream().toList());
+
+            List<AttributeTemplate> attributeList = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier).getAttributes();
+            for (int i = 0; i < attributeList.size(); i++)
+                if (attributeList.get(i).getAttributeTypeID().equals("tiered:generic.durable")) {
+                    nbtKeys.add("durable");
+                    break;
+                }
+
+            if (!nbtKeys.isEmpty())
+                for (int i = 0; i < nbtKeys.size(); i++)
+                    if (!nbtKeys.get(i).equals("Damage"))
+                        itemStack.getNbt().remove(nbtKeys.get(i));
+
+            itemStack.removeSubNbt(Tiered.NBT_SUBTAG_KEY);
         }
     }
 

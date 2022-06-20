@@ -13,8 +13,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldEvents;
 
@@ -76,7 +74,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
 
     private void updateResult() {
         if (this.getSlot(0).hasStack() && this.getSlot(1).hasStack() && this.getSlot(2).hasStack()) {
-            if (ModifierUtils.getRandomAttributeIDFor(this.getSlot(1).getStack().getItem(), false) != null) {
+            if (ModifierUtils.getRandomAttributeIDFor(this.getSlot(1).getStack().getItem(), false) != null && !this.getSlot(1).getStack().isDamaged()) {
                 if (this.getSlot(1).getStack().getItem() instanceof ToolItem)
                     this.reforgeReady = ((ToolItem) this.getSlot(1).getStack().getItem()).getMaterial().getRepairIngredient().test(this.getSlot(0).getStack());
                 else if (this.getSlot(1).getStack().getItem() instanceof ArmorItem)
@@ -157,10 +155,9 @@ public class ReforgeScreenHandler extends ScreenHandler {
     }
 
     public void reforge() {
-        // this.player.world.playSound(null, pos, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 1.0f, 1.0f);
         ItemStack itemStack = this.getSlot(1).getStack();
-        if (itemStack.hasNbt() && itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) != null)
-            itemStack.removeSubNbt(Tiered.NBT_SUBTAG_KEY);
+        ModifierUtils.removeItemStackAttribute(itemStack);
+        ModifierUtils.setItemStackAttribute(itemStack, true);
 
         this.decrementStack(0);
         this.decrementStack(2);

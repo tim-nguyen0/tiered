@@ -8,10 +8,10 @@ import me.shedaniel.autoconfig.annotation.Config;
 @Config.Gui.Background("minecraft:textures/block/stone.png")
 public class TieredConfig implements ConfigData {
 
-    public int test0 = 0;
-    public int test1 = 0;
     @Comment("Items in for example mineshaft chests get modifiers")
     public boolean lootContainerModifier = true;
+    @Comment("Decreases the biggest weights")
+    public float reforge_modifier = 0.9F;
 
     public int xIconPosition = 0;
     public int yIconPosition = 0;

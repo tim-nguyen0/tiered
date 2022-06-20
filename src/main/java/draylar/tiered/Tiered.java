@@ -32,6 +32,7 @@ import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -147,35 +148,41 @@ public class Tiered implements ModInitializer {
         });
     }
 
-    // Todo: Update all nbt tags here!
-
     public static void updateItemStackNbt(PlayerInventory playerInventory) {
         for (int u = 0; u < playerInventory.size(); u++) {
             ItemStack itemStack = playerInventory.getStack(u);
             if (!itemStack.isEmpty() && itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) != null) {
-                // attempt to get a random tier
-                Identifier potentialAttributeID = ModifierUtils.getRandomAttributeIDFor(itemStack.getItem(), false);
 
-                // Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().forEach((id, attribute) -> {
-                //     if (attribute.isValid(Registry.ITEM.getId(item)) && attribute.getWeight() > 0) {
-                //         potentialAttributes.add(new Identifier(attribute.getID()));
-                //         attributeWeights.add(attribute.getWeight());
-                //     }
-                // });
+                // Check if attribute exists
+                List<String> attributeIds = new ArrayList<>();
+                Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().forEach((id, attribute) -> {
+                    if (attribute.isValid(Registry.ITEM.getId(itemStack.getItem())))
+                        attributeIds.add(attribute.getID());
 
-                // System.out.println(itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) + " : " + potentialAttributeID);
+                });
+                Identifier attributeID = null;
+                for (int i = 0; i < attributeIds.size(); i++) {
+                    if (itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY).asString().contains(attributeIds.get(i))) {
+                        attributeID = new Identifier(attributeIds.get(i));
+                        break;
+                    } else if (i == attributeIds.size() - 1) {
+                        ModifierUtils.removeItemStackAttribute(itemStack);
+                        attributeID = ModifierUtils.getRandomAttributeIDFor(itemStack.getItem(), false);
+                    }
+                }
+
                 // found an ID
-                if (potentialAttributeID != null) {
+                if (attributeID != null) {
 
-                    HashMap<String, Object> nbtMap = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(new Identifier(potentialAttributeID.toString())).getNbtValues();
+                    HashMap<String, Object> nbtMap = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(new Identifier(attributeID.toString())).getNbtValues();
                     // update durability nbt
 
-                    List<AttributeTemplate> attributeList = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(new Identifier(potentialAttributeID.toString())).getAttributes();
+                    List<AttributeTemplate> attributeList = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(new Identifier(attributeID.toString())).getAttributes();
                     for (int i = 0; i < attributeList.size(); i++)
                         if (attributeList.get(i).getAttributeTypeID().equals("tiered:generic.durable")) {
                             if (nbtMap == null)
                                 nbtMap = new HashMap<String, Object>();
-                            nbtMap.put("durable", attributeList.get(i).getEntityAttributeModifier().getValue());
+                            nbtMap.put("durable", (double) Math.round(attributeList.get(i).getEntityAttributeModifier().getValue() * 100.0) / 100.0);
                             break;
                         }
 
@@ -197,13 +204,15 @@ public class Tiered implements ModInitializer {
                                 if ((double) value % 1.0 < 0.0001D)
                                     nbtCompound.putInt(key, (int) Math.round((double) value));
                                 else
-                                    nbtCompound.putDouble(key, (double) value);
+                                    nbtCompound.putDouble(key, Math.round((double) value * 100.0) / 100.0);
                             }
                         }
                         itemStack.setNbt(nbtCompound);
-
-                        // System.out.println(nbtCompound);
                     }
+                    if (itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) == null)
+                        itemStack.getOrCreateSubNbt(Tiered.NBT_SUBTAG_KEY).putString(Tiered.NBT_SUBTAG_DATA_KEY, attributeID.toString());
+
+                    playerInventory.setStack(u, itemStack);
                 }
             }
         }
