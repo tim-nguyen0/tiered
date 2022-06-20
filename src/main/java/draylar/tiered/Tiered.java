@@ -154,8 +154,16 @@ public class Tiered implements ModInitializer {
             ItemStack itemStack = playerInventory.getStack(u);
             if (!itemStack.isEmpty() && itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) != null) {
                 // attempt to get a random tier
-                Identifier potentialAttributeID = ModifierUtils.getRandomAttributeIDFor(itemStack.getItem());
+                Identifier potentialAttributeID = ModifierUtils.getRandomAttributeIDFor(itemStack.getItem(), false);
 
+                // Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().forEach((id, attribute) -> {
+                //     if (attribute.isValid(Registry.ITEM.getId(item)) && attribute.getWeight() > 0) {
+                //         potentialAttributes.add(new Identifier(attribute.getID()));
+                //         attributeWeights.add(attribute.getWeight());
+                //     }
+                // });
+
+                // System.out.println(itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) + " : " + potentialAttributeID);
                 // found an ID
                 if (potentialAttributeID != null) {
 

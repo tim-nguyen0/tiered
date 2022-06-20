@@ -24,7 +24,7 @@ import net.minecraft.util.Identifier;
 public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen<T> implements ScreenHandlerListener {
 
     public static final Identifier TEXTURE = new Identifier("tiered", "textures/gui/reforging_screen.png");
-    private ReforgeScreen<T>.ReforgeButton reforgeButton;
+    public ReforgeScreen<T>.ReforgeButton reforgeButton;
 
     public ReforgeScreen(T handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title);
@@ -43,17 +43,8 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
         this.reforgeButton = (ReforgeScreen<T>.ReforgeButton) this.addDrawableChild(new ReforgeScreen.ReforgeButton(i + 79, j + 56, (button) -> {
-            if (button instanceof ReforgeScreen.ReforgeButton) {
-                System.out.println(((ReforgeScreenHandler) this.handler).reforgeReady);
-                // ((((ReforgeScreenHandler) this.handler).getSlot(0).hasStack()
-                // System.out.println("PRESSED!");
-                // if(((ReforgeScreen.ReforgeButton)button).disabled)
-
-                // if (this.acceptedQuestIdList.contains(this.selectedQuest.getQuestId()) && this.selectedQuest.canCompleteQuest(this.playerEntity))
-                // this.completeQuest();
-                // else
-                // this.acceptQuest();
-            }
+            if (button instanceof ReforgeScreen.ReforgeButton && !((ReforgeScreen.ReforgeButton) button).disabled)
+                TieredClientPacket.writeC2SReforgePacket();
         }));
     }
 
@@ -139,7 +130,7 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
     // }
     // }
 
-    private class ReforgeButton extends ButtonWidget {
+    public class ReforgeButton extends ButtonWidget {
         private boolean disabled;
 
         public ReforgeButton(int x, int y, ButtonWidget.PressAction onPress) {
@@ -162,6 +153,10 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
                 j += this.width;
             }
             this.drawTexture(matrices, this.x, this.y, j, 0, this.width, this.height);
+        }
+
+        public void setDisabled(boolean disable) {
+            this.disabled = disable;
         }
 
     }

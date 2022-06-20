@@ -20,6 +20,7 @@ public class TieredItemTags {
     // public static final TagKey<Item> AXES = register("axes");
 
     public static final TagKey<Item> REFORGE_ADDITION = register("reforge_addition");
+    public static final TagKey<Item> REFORGE_BASE_ITEM = register("reforge_base_item");
 
     private TieredItemTags() {
     }

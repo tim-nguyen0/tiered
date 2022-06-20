@@ -2,6 +2,7 @@ package draylar.tiered.network;
 
 import draylar.tiered.access.AnvilScreenHandlerAccess;
 import draylar.tiered.access.MouseAccessor;
+import draylar.tiered.reforge.ReforgeScreen;
 import draylar.tiered.reforge.ReforgeScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -12,6 +13,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.math.BlockPos;
 
+@SuppressWarnings("rawtypes")
 @Environment(EnvType.CLIENT)
 public class TieredClientPacket {
 
@@ -33,6 +35,13 @@ public class TieredClientPacket {
                 ((MouseAccessor) client.mouse).setMousePosition(mouseX, mouseY);
             });
         });
+        ClientPlayNetworking.registerGlobalReceiver(TieredServerPacket.REFORGE_READY, (client, handler, buf, sender) -> {
+            boolean disableButton = buf.readBoolean();
+            client.execute(() -> {
+                if (client.currentScreen instanceof ReforgeScreen)
+                    ((ReforgeScreen) client.currentScreen).reforgeButton.setDisabled(disableButton);
+            });
+        });
     }
 
     public static void writeC2SScreenPacket(BlockPos pos, int mouseX, int mouseY, boolean reforgingScreen) {
@@ -49,6 +58,12 @@ public class TieredClientPacket {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBoolean(reforgeHandler);
         CustomPayloadC2SPacket packet = new CustomPayloadC2SPacket(TieredServerPacket.SYNC_POS_CS, buf);
+        MinecraftClient.getInstance().getNetworkHandler().sendPacket(packet);
+    }
+
+    public static void writeC2SReforgePacket() {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        CustomPayloadC2SPacket packet = new CustomPayloadC2SPacket(TieredServerPacket.REFORGE, buf);
         MinecraftClient.getInstance().getNetworkHandler().sendPacket(packet);
     }
 

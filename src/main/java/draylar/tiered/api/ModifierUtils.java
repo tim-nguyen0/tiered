@@ -26,7 +26,7 @@ public class ModifierUtils {
      * @return id of random attribute for item in {@link Identifier} form, or null if there are no valid options
      */
     @Nullable
-    public static Identifier getRandomAttributeIDFor(Item item) {
+    public static Identifier getRandomAttributeIDFor(Item item, boolean reforge) {
         List<Identifier> potentialAttributes = new ArrayList<>();
         List<Integer> attributeWeights = new ArrayList<>();
         // collect all valid attributes for the given item and their weights
@@ -58,11 +58,11 @@ public class ModifierUtils {
     }
 
     // Set on
-    public static void setItemStackAttribute(ItemStack stack) {
+    public static void setItemStackAttribute(ItemStack stack, boolean reforge) {
         if (stack.getSubNbt(Tiered.NBT_SUBTAG_KEY) == null) {
 
             // attempt to get a random tier
-            Identifier potentialAttributeID = ModifierUtils.getRandomAttributeIDFor(stack.getItem());
+            Identifier potentialAttributeID = ModifierUtils.getRandomAttributeIDFor(stack.getItem(), reforge);
             // found an ID
             if (potentialAttributeID != null) {
                 stack.getOrCreateSubNbt(Tiered.NBT_SUBTAG_KEY).putString(Tiered.NBT_SUBTAG_DATA_KEY, potentialAttributeID.toString());
