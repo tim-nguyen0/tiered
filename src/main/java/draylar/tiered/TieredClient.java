@@ -4,6 +4,7 @@ import draylar.tiered.api.PotentialAttribute;
 import draylar.tiered.data.AttributeDataLoader;
 import draylar.tiered.network.TieredClientPacket;
 import draylar.tiered.reforge.ReforgeScreen;
+import draylar.tiered.reforge.ReforgeScreenHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
@@ -20,10 +21,7 @@ public class TieredClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         registerAttributeSyncHandler();
-        // HandledScreens.<QuestScreenHandler, QuestScreen>register(VillagerQuestsMain.QUEST_SCREEN_HANDLER_TYPE, (handler, inventory, title) -> new QuestScreen(handler, inventory.player, title));
-        // HandledScreens.<ReforgeScreenHandler, ReforgeScreen>register(Tiered.REFORGE_SCREEN_HANDLER_TYPE, (handler, inventory, title) -> new ReforgeScreen(handler, inventory.player, title));
-        // HandledScreens.<ReforgeScreenHandler, ReforgeScreen>register(Tiered.REFORGE_SCREEN_HANDLER_TYPE, (handler, inventory, title) -> new ReforgeScreen(handler, inventory, title));
-        HandledScreens.register(Tiered.REFORGE_SCREEN_HANDLER_TYPE, ReforgeScreen::new);
+        HandledScreens.<ReforgeScreenHandler, ReforgeScreen>register(Tiered.REFORGE_SCREEN_HANDLER_TYPE, ReforgeScreen::new);
         TieredClientPacket.init();
     }
 

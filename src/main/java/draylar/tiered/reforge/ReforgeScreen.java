@@ -19,20 +19,16 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 @Environment(EnvType.CLIENT)
-public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen<T> implements ScreenHandlerListener {
+public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implements ScreenHandlerListener {
 
     public static final Identifier TEXTURE = new Identifier("tiered", "textures/gui/reforging_screen.png");
-    public ReforgeScreen<T>.ReforgeButton reforgeButton;
+    public ReforgeScreen.ReforgeButton reforgeButton;
 
-    public ReforgeScreen(T handler, PlayerInventory playerInventory, Text title) {
+    public ReforgeScreen(ReforgeScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title);
         this.titleX = 60;
         TieredClientPacket.writeC2SSyncPosPacket(false);
-
-        // System.out.println(this.reforgeButton + ": "+this.getdr);
-
     }
 
     @Override
@@ -42,7 +38,7 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
 
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
-        this.reforgeButton = (ReforgeScreen<T>.ReforgeButton) this.addDrawableChild(new ReforgeScreen.ReforgeButton(i + 79, j + 56, (button) -> {
+        this.reforgeButton = (ReforgeScreen.ReforgeButton) this.addDrawableChild(new ReforgeScreen.ReforgeButton(i + 79, j + 56, (button) -> {
             if (button instanceof ReforgeScreen.ReforgeButton && !((ReforgeScreen.ReforgeButton) button).disabled)
                 TieredClientPacket.writeC2SReforgePacket();
         }));
@@ -59,13 +55,8 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
         RenderSystem.disableBlend();
-        // this.renderForeground(matrices, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
-
-    // protected void renderForeground(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-    // this.reforgeButton.render(matrices, mouseX, mouseY, delta);
-    // }
 
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
@@ -76,14 +67,6 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
         int j = (this.height - this.backgroundHeight) / 2;
         this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        // this.drawTexture(matrices, i + 59, j + 20, 0, this.backgroundHeight + (((ReforgeScreenHandler) this.handler).getSlot(0).hasStack() ? 0 : 16), 110, 16);
-        // if ((((ReforgeScreenHandler) this.handler).getSlot(0).hasStack() || ((ReforgeScreenHandler) this.handler).getSlot(1).hasStack())
-        // && !((ReforgeScreenHandler) this.handler).getSlot(2).hasStack()) {
-        // this.drawTexture(matrices, i + 99, j + 45, this.backgroundWidth, 0, 28, 21);
-        // }
-
-        // System.out.println(this.reforgeButton.visible);
-
         // anvil icon
         this.drawTexture(matrices, this.x + ConfigInit.CONFIG.xIconPosition, this.y - 21 + ConfigInit.CONFIG.yIconPosition, 24, 166, 24, 25);
         // reforge icon
@@ -91,9 +74,6 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
 
         if (this.isPointWithinBounds(0 + ConfigInit.CONFIG.xIconPosition, -21 + ConfigInit.CONFIG.yIconPosition, 24, 21, (double) mouseX, (double) mouseY))
             this.renderTooltip(matrices, new TranslatableText("container.repair"), mouseX, mouseY);
-
-        // this.reforgeButton.render(matrices, mouseX, mouseY, delta);
-        // this.reforgeButton.renderButton(matrices, mouseX, mouseY, delta);
     }
 
     @Override
@@ -111,24 +91,6 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
 
         return super.mouseClicked(mouseX, mouseY, button);
     }
-
-    // class DoneButtonWidget extends IconButtonWidget {
-    // public DoneButtonWidget(int x, int y) {
-    // super(x, y, 90, 220, ScreenTexts.DONE);
-    // }
-
-    // @Override
-    // public void onPress() {
-    // BeaconScreen.this.client.getNetworkHandler()
-    // .sendPacket(new UpdateBeaconC2SPacket(StatusEffect.getRawId(BeaconScreen.this.primaryEffect), StatusEffect.getRawId(BeaconScreen.this.secondaryEffect)));
-    // ((BeaconScreen) BeaconScreen.this).client.player.closeHandledScreen();
-    // }
-
-    // @Override
-    // public void tick(int level) {
-    // this.active = ((BeaconScreenHandler) BeaconScreen.this.handler).hasPayment() && BeaconScreen.this.primaryEffect != null;
-    // }
-    // }
 
     public class ReforgeButton extends ButtonWidget {
         private boolean disabled;
@@ -160,109 +122,5 @@ public class ReforgeScreen<T extends ReforgeScreenHandler> extends HandledScreen
         }
 
     }
-
-    // private class IconButtonWidget extends PressableWidget {
-    // // private final int x;
-    // // private final int v;
-    // private boolean disabled;
-
-    // // protected IconButtonWidget(int x, int y, int u, int v, Text message) {
-    // // super(x, y, message);
-    // // this.u = u;
-    // // this.v = v;
-    // // }
-
-    // public IconButtonWidget(int x, int y) {
-    // super(x, y, 18, 18, LiteralText.EMPTY);
-    // }
-
-    // @Override
-    // public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-    // RenderSystem.setShader(GameRenderer::getPositionTexShader);
-    // RenderSystem.setShaderTexture(0, TEXTURE);
-    // RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-    // int j = 176;
-    // if (this.isHovered()) {
-    // j += this.width * 2;
-    // } else if (this.disabled) {
-    // j += this.width * 3;
-    // }
-    // this.drawTexture(matrices, this.x, this.y, j, 0, this.width, this.height);
-    // // this.renderExtra(matrices);
-    // }
-
-    // // @Override
-    // // protected void renderExtra(MatrixStack matrices) {
-    // // this.drawTexture(matrices, this.x + 2, this.y + 2, this.u, this.v, 18, 18);
-    // // }
-
-    // public boolean isDisabled() {
-    // return this.disabled;
-    // }
-
-    // public void setDisabled(boolean disabled) {
-    // this.disabled = disabled;
-    // }
-
-    // @Override
-    // public void appendNarrations(NarrationMessageBuilder var1) {
-    // // TODO Auto-generated method stub
-
-    // }
-
-    // @Override
-    // public void onPress() {
-    // System.out.println("TEST");
-    // }
-
-    // // @Override
-    // // public boolean shouldRenderTooltip() {
-    // // return this.hovered;
-    // // }
-
-    // // @Override
-    // // public void appendNarrations(NarrationMessageBuilder builder) {
-    // // this.appendDefaultNarrations(builder);
-    // // }
-
-    // // @Override
-    // // public void renderTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-    // // BeaconScreen.this.renderTooltip(matrices, BeaconScreen.this.title, mouseX, mouseY);
-    // // }
-
-    // }
-
-    // static abstract class BaseButtonWidget extends PressableWidget implements BeaconButtonWidget {
-    // private boolean disabled;
-
-    // protected BaseButtonWidget(int x, int y) {
-    // super(x, y, 22, 22, LiteralText.EMPTY);
-    // }
-
-    // protected BaseButtonWidget(int x, int y, Text message) {
-    // super(x, y, 22, 22, message);
-    // }
-
-    // @Override
-    // public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-    // RenderSystem.setShader(GameRenderer::getPositionTexShader);
-    // RenderSystem.setShaderTexture(0, TEXTURE);
-    // RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-    // int i = 219;
-    // int j = 0;
-    // if (!this.active) {
-    // j += this.width * 2;
-    // } else if (this.disabled) {
-    // j += this.width * 1;
-    // } else if (this.isHovered()) {
-    // j += this.width * 3;
-    // }
-    // this.drawTexture(matrices, this.x, this.y, j, 219, this.width, this.height);
-    // this.renderExtra(matrices);
-    // }
-
-    // protected abstract void renderExtra(MatrixStack var1);
-
-    // }
 
 }
