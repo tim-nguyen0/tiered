@@ -13,7 +13,8 @@
     "SpectralArrowEntityMixin",
     "FabricItemMixin",
     "LootTableMixin",
-    "AnvilScreenHandlerMixin"
+    "AnvilScreenHandlerMixin",
+    "MerchantScreenHandlerMixin"
   ],
   "client": [
     "client.ItemStackClientMixin",
