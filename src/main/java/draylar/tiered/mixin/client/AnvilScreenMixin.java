@@ -26,7 +26,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-@Mixin(AnvilScreen.class)
+@Mixin(value = AnvilScreen.class, priority = 1001)
 public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler> {
 
     @Shadow
