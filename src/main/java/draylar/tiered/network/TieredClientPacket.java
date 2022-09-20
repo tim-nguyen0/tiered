@@ -13,7 +13,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.math.BlockPos;
 
-@SuppressWarnings("rawtypes")
 @Environment(EnvType.CLIENT)
 public class TieredClientPacket {
 

@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.12-SNAPSHOT'
+	id 'fabric-loom' version '1.0-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -16,6 +16,7 @@ repositories {
     maven { url "https://maven.terraformersmc.com/" }
 	maven { url "https://maven.jamieswhiteshirt.com/libs-release/" }
 	maven { url "https://cursemaven.com" }
+	maven { url "https://maven.willbl.dev/releases" }
 }
 
 dependencies {
@@ -57,11 +58,12 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 	// Additional Entity Attributes
-	modImplementation include ("com.github.DaFuqs:AdditionalEntityAttributes:d0cd35d"), {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
+	// modImplementation include ("com.github.DaFuqs:AdditionalEntityAttributes:d0cd35d"), {
+	// 	exclude(group: "net.fabricmc.fabric-api")
+	// }
 	// Autotag
-	modImplementation include ("com.github.apace100:autotag:1.18-SNAPSHOT")
+	modImplementation ("com.github.apace100:autotag-api:${autotag_version}")
+	modImplementation ("com.github.apace100:autotag:${autotag_version}")
 }
 
 processResources {

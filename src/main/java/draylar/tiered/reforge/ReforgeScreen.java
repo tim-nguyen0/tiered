@@ -14,9 +14,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
-import net.minecraft.text.LiteralText;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -73,7 +72,7 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
         this.drawTexture(matrices, this.x + 25 + ConfigInit.CONFIG.xIconPosition, this.y - 23 + ConfigInit.CONFIG.yIconPosition, 72, 166, 24, 27);
 
         if (this.isPointWithinBounds(0 + ConfigInit.CONFIG.xIconPosition, -21 + ConfigInit.CONFIG.yIconPosition, 24, 21, (double) mouseX, (double) mouseY))
-            this.renderTooltip(matrices, new TranslatableText("container.repair"), mouseX, mouseY);
+            this.renderTooltip(matrices, Text.translatable("container.repair"), mouseX, mouseY);
     }
 
     @Override
@@ -96,7 +95,7 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
         private boolean disabled;
 
         public ReforgeButton(int x, int y, ButtonWidget.PressAction onPress) {
-            super(x, y, 18, 18, LiteralText.EMPTY, onPress);
+            super(x, y, 18, 18, ScreenTexts.EMPTY, onPress);
             this.disabled = true;
         }
 

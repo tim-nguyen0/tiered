@@ -3,7 +3,6 @@ package draylar.tiered.api;
 import draylar.tiered.Tiered;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.util.registry.Registry;
 
 public class CustomEntityAttributes {

@@ -23,7 +23,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -55,7 +54,7 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
         this.drawTexture(matrices, this.x + 25 + ConfigInit.CONFIG.xIconPosition, this.y - 21 + ConfigInit.CONFIG.yIconPosition, 48, 166, 24, 21);
 
         if (this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
-            this.renderTooltip(matrices, new TranslatableText("screen.tiered.reforging_screen"), mouseX, mouseY);
+            this.renderTooltip(matrices, Text.translatable("screen.tiered.reforging_screen"), mouseX, mouseY);
 
     }
 

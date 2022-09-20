@@ -10,7 +10,7 @@ import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
@@ -33,11 +33,11 @@ public class TieredServerPacket {
                 if (reforgingScreen)
                     player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
                         return new ReforgeScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
-                    }, new TranslatableText("container.reforge")));
+                    }, Text.translatable("container.reforge")));
                 else
                     player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
                         return new AnvilScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
-                    }, new TranslatableText("container.repair")));
+                    }, Text.translatable("container.repair")));
                 writeS2CMousePositionPacket(player, mouseX, mouseY);
             }
         });

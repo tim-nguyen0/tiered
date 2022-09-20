@@ -25,7 +25,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -114,7 +114,7 @@ public class Tiered implements ModInitializer {
                 PotentialAttribute potentialAttribute = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier);
 
                 if (potentialAttribute != null)
-                    lines.add(1, new TranslatableText(potentialAttribute.getID() + ".label").setStyle(potentialAttribute.getStyle()));
+                    lines.add(1, Text.translatable(potentialAttribute.getID() + ".label").setStyle(potentialAttribute.getStyle()));
             }
         });
     }

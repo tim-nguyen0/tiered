@@ -6,7 +6,6 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
-    "ServerPlayerEntityMixin",
     "ItemMixin",
     "ArrowEntityMixin",
     "TridentEntityMixin",
