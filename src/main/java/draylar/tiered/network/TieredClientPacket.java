@@ -24,7 +24,7 @@ public class TieredClientPacket {
                 if (reforgeHandler)
                     ((AnvilScreenHandlerAccess) client.player.currentScreenHandler).setPos(pos);
                 else
-                    ((ReforgeScreenHandler) client.player.currentScreenHandler).pos = pos;
+                    ((ReforgeScreenHandler) client.player.currentScreenHandler).setPos(pos);
             });
         });
         ClientPlayNetworking.registerGlobalReceiver(TieredServerPacket.SET_MOUSE_POSITION, (client, handler, buf, sender) -> {

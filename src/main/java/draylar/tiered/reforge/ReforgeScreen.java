@@ -86,7 +86,7 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.client != null && this.isPointWithinBounds(0 + ConfigInit.CONFIG.xIconPosition, -21 + ConfigInit.CONFIG.yIconPosition, 24, 21, (double) mouseX, (double) mouseY))
-            TieredClientPacket.writeC2SScreenPacket(handler.pos, (int) this.client.mouse.getX(), (int) this.client.mouse.getY(), false);
+            TieredClientPacket.writeC2SScreenPacket(handler.getPos(), (int) this.client.mouse.getX(), (int) this.client.mouse.getY(), false);
 
         return super.mouseClicked(mouseX, mouseY, button);
     }

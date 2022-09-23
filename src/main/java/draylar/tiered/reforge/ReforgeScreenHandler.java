@@ -34,7 +34,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
     private final ScreenHandlerContext context;
     private final PlayerEntity player;
     private boolean reforgeReady;
-    public BlockPos pos;
+    private BlockPos pos;
 
     public ReforgeScreenHandler(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
         super(Tiered.REFORGE_SCREEN_HANDLER_TYPE, syncId);
@@ -162,6 +162,14 @@ public class ReforgeScreenHandler extends ScreenHandler {
         this.decrementStack(0);
         this.decrementStack(2);
         this.context.run((world, pos) -> world.syncWorldEvent(WorldEvents.ANVIL_USED, (BlockPos) pos, 0));
+    }
+
+    public void setPos(BlockPos pos) {
+        this.pos = pos;
+    }
+
+    public BlockPos getPos() {
+        return this.pos;
     }
 
     private void decrementStack(int slot) {

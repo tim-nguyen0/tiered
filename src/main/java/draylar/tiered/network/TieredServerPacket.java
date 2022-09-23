@@ -49,7 +49,7 @@ public class TieredServerPacket {
                 if (reforgeHandler)
                     pos = ((AnvilScreenHandlerAccess) player.currentScreenHandler).getPos();
                 else
-                    pos = ((ReforgeScreenHandler) player.currentScreenHandler).pos;
+                    pos = ((ReforgeScreenHandler) player.currentScreenHandler).getPos();
                 buf.writeBlockPos(pos);
                 buf.writeBoolean(reforgeHandler);
                 CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(SYNC_POS_SC, buf);

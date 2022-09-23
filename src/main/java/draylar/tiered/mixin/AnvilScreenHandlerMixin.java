@@ -1,6 +1,7 @@
 package draylar.tiered.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 @Mixin(AnvilScreenHandler.class)
 public class AnvilScreenHandlerMixin implements AnvilScreenHandlerAccess {
 
+    @Unique
     private BlockPos pos;
 
     @Inject(method = "Lnet/minecraft/screen/AnvilScreenHandler;<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V", at = @At("TAIL"))
