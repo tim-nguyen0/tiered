@@ -62,7 +62,7 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.client != null && this.focusedSlot == null
+        if (this.client != null && this.focusedSlot == null && !isBCLibLoaded
                 && this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
             TieredClientPacket.writeC2SScreenPacket(((AnvilScreenHandlerAccess) handler).getPos(), (int) this.client.mouse.getX(), (int) this.client.mouse.getY(), true);
 
