@@ -25,6 +25,6 @@ public class LootTableMixin {
     private void supplyInventoryMixin(Inventory inventory, LootContext context, CallbackInfo info, ObjectArrayList<ItemStack> objectArrayList, Random random, List<Integer> list,
             ObjectListIterator<ItemStack> var6, ItemStack itemStack) {
         if (ConfigInit.CONFIG.lootContainerModifier)
-            ModifierUtils.setItemStackAttribute(itemStack, false);
+            ModifierUtils.setItemStackAttribute(null, itemStack, false);
     }
 }

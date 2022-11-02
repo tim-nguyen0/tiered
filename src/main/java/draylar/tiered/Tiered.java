@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
@@ -39,6 +40,8 @@ import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class Tiered implements ModInitializer {
+
+    public static final boolean isLevelZLoaded = FabricLoader.getInstance().isModLoaded("levelz");
 
     /**
      * Attribute Data Loader instance which handles loading attribute .json files from "data/modid/item_attributes".
@@ -167,7 +170,7 @@ public class Tiered implements ModInitializer {
                         break;
                     } else if (i == attributeIds.size() - 1) {
                         ModifierUtils.removeItemStackAttribute(itemStack);
-                        attributeID = ModifierUtils.getRandomAttributeIDFor(itemStack.getItem(), false);
+                        attributeID = ModifierUtils.getRandomAttributeIDFor(null, itemStack.getItem(), false);
                     }
                 }
 

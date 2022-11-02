@@ -3,6 +3,8 @@ package draylar.tiered.api;
 import draylar.tiered.Tiered;
 import draylar.tiered.config.ConfigInit;
 import draylar.tiered.util.SortList;
+import net.levelz.access.PlayerStatsManagerAccess;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -10,6 +12,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -27,7 +30,7 @@ public class ModifierUtils {
      * @return id of random attribute for item in {@link Identifier} form, or null if there are no valid options
      */
     @Nullable
-    public static Identifier getRandomAttributeIDFor(Item item, boolean reforge) {
+    public static Identifier getRandomAttributeIDFor(@Nullable PlayerEntity playerEntity, Item item, boolean reforge) {
         List<Identifier> potentialAttributes = new ArrayList<>();
         List<Integer> attributeWeights = new ArrayList<>();
         // collect all valid attributes for the given item and their weights
@@ -43,7 +46,14 @@ public class ModifierUtils {
             int maxWeight = attributeWeights.get(attributeWeights.size() - 1);
             for (int i = 0; i < attributeWeights.size(); i++)
                 if (attributeWeights.get(i) > maxWeight / 2)
-                    attributeWeights.set(i, (int) (attributeWeights.get(i) * ConfigInit.CONFIG.reforge_modifier));// * attributeWeights;
+                    attributeWeights.set(i, (int) (attributeWeights.get(i) * ConfigInit.CONFIG.reforge_modifier));
+        }
+        if (Tiered.isLevelZLoaded && playerEntity != null) {
+            int newMaxWeight = Collections.max(attributeWeights);
+            for (int i = 0; i < attributeWeights.size(); i++)
+                if (attributeWeights.get(i) > newMaxWeight / 3)
+                    attributeWeights.set(i, (int) (attributeWeights.get(i)
+                            * (1.0f - ConfigInit.CONFIG.levelz_reforge_modifier * ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("smithing"))));
         }
         if (potentialAttributes.size() > 0) {
             int totalWeight = 0;
@@ -63,11 +73,11 @@ public class ModifierUtils {
             return null;
     }
 
-    public static void setItemStackAttribute(ItemStack stack, boolean reforge) {
+    public static void setItemStackAttribute(@Nullable PlayerEntity playerEntity, ItemStack stack, boolean reforge) {
         if (stack.getSubNbt(Tiered.NBT_SUBTAG_KEY) == null) {
 
             // attempt to get a random tier
-            Identifier potentialAttributeID = ModifierUtils.getRandomAttributeIDFor(stack.getItem(), reforge);
+            Identifier potentialAttributeID = ModifierUtils.getRandomAttributeIDFor(playerEntity, stack.getItem(), reforge);
             // found an ID
             if (potentialAttributeID != null) {
                 stack.getOrCreateSubNbt(Tiered.NBT_SUBTAG_KEY).putString(Tiered.NBT_SUBTAG_DATA_KEY, potentialAttributeID.toString());

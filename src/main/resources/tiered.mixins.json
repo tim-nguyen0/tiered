@@ -2,6 +2,7 @@
   "required": true,
   "package": "draylar.tiered.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "draylar.tiered.mixin.compat.TieredMixinPlugin",
   "mixins": [
     "ItemStackMixin",
     "LivingEntityMixin",
@@ -13,7 +14,8 @@
     "FabricItemMixin",
     "LootTableMixin",
     "AnvilScreenHandlerMixin",
-    "MerchantScreenHandlerMixin"
+    "MerchantScreenHandlerMixin",
+    "compat.InfoGuiMixin"
   ],
   "client": [
     "client.ItemStackClientMixin",

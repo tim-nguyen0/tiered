@@ -74,7 +74,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
 
     private void updateResult() {
         if (this.getSlot(0).hasStack() && this.getSlot(1).hasStack() && this.getSlot(2).hasStack()) {
-            if (ModifierUtils.getRandomAttributeIDFor(this.getSlot(1).getStack().getItem(), false) != null && !this.getSlot(1).getStack().isDamaged()) {
+            if (ModifierUtils.getRandomAttributeIDFor(null, this.getSlot(1).getStack().getItem(), false) != null && !this.getSlot(1).getStack().isDamaged()) {
                 if (this.getSlot(1).getStack().getItem() instanceof ToolItem)
                     this.reforgeReady = ((ToolItem) this.getSlot(1).getStack().getItem()).getMaterial().getRepairIngredient().test(this.getSlot(0).getStack());
                 else if (this.getSlot(1).getStack().getItem() instanceof ArmorItem)
@@ -134,7 +134,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
                     if (itemStack.isIn(TieredItemTags.REFORGE_BASE_ITEM) && !this.insertItem(itemStack2, 0, 1, false))
                         return ItemStack.EMPTY;
                 }
-                if (ModifierUtils.getRandomAttributeIDFor(itemStack.getItem(), false) != null && !this.insertItem(itemStack2, 1, 2, false))
+                if (ModifierUtils.getRandomAttributeIDFor(null, itemStack.getItem(), false) != null && !this.insertItem(itemStack2, 1, 2, false))
                     return ItemStack.EMPTY;
             }
             if (itemStack2.isEmpty()) {
@@ -157,7 +157,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
     public void reforge() {
         ItemStack itemStack = this.getSlot(1).getStack();
         ModifierUtils.removeItemStackAttribute(itemStack);
-        ModifierUtils.setItemStackAttribute(itemStack, true);
+        ModifierUtils.setItemStackAttribute(player, itemStack, true);
 
         this.decrementStack(0);
         this.decrementStack(2);

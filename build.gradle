@@ -17,6 +17,7 @@ repositories {
 	maven { url "https://maven.jamieswhiteshirt.com/libs-release/" }
 	maven { url "https://cursemaven.com" }
 	maven { url "https://maven.willbl.dev/releases" }
+	maven { url "https://server.bbkr.space/artifactory/libs-release" }
 }
 
 dependencies {
@@ -64,6 +65,11 @@ dependencies {
 	// Autotag
 	modImplementation ("com.github.apace100:autotag-api:${autotag_version}")
 	modImplementation ("com.github.apace100:autotag:${autotag_version}")
+	// LevelZ
+	modCompileOnly ("curse.maven:levelz-517130:3973731"),{
+    	exclude(group: "net.fabricmc.fabric-api")
+  	}
+	modCompileOnly ("io.github.cottonmc:LibGui:6.0.1+1.19")
 }
 
 processResources {

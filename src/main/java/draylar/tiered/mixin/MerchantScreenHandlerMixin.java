@@ -19,7 +19,7 @@ public abstract class MerchantScreenHandlerMixin extends ScreenHandler {
 
     @ModifyVariable(method = "transferSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/MerchantScreenHandler;insertItem(Lnet/minecraft/item/ItemStack;IIZ)Z", ordinal = 0), ordinal = 1)
     private ItemStack transferSlot2Mixin(ItemStack original) {
-        ModifierUtils.setItemStackAttribute(original, false);
+        ModifierUtils.setItemStackAttribute(null, original, false);
         return original;
     }
 }

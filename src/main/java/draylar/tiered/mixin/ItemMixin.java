@@ -19,7 +19,7 @@ public class ItemMixin {
     @Inject(method = "onCraft", at = @At("TAIL"))
     private void onCraftMixin(ItemStack stack, World world, PlayerEntity player, CallbackInfo info) {
         if (!world.isClient && !stack.isEmpty())
-            ModifierUtils.setItemStackAttribute(stack, false);
+            ModifierUtils.setItemStackAttribute(player, stack, false);
     }
 
 }
