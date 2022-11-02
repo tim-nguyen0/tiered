@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.util.math.BlockPos;
 
 @Environment(EnvType.CLIENT)
@@ -21,9 +22,10 @@ public class TieredClientPacket {
             BlockPos pos = buf.readBlockPos();
             Boolean reforgeHandler = buf.readBoolean();
             client.execute(() -> {
-                if (reforgeHandler)
-                    ((AnvilScreenHandlerAccess) client.player.currentScreenHandler).setPos(pos);
-                else
+                if (reforgeHandler) {
+                    if (client.player.currentScreenHandler instanceof AnvilScreenHandler)
+                        ((AnvilScreenHandlerAccess) client.player.currentScreenHandler).setPos(pos);
+                } else if (client.player.currentScreenHandler instanceof ReforgeScreenHandler)
                     ((ReforgeScreenHandler) client.player.currentScreenHandler).setPos(pos);
             });
         });
