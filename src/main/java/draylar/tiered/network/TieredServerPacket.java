@@ -27,33 +27,20 @@ public class TieredServerPacket {
         ServerPlayNetworking.registerGlobalReceiver(SET_SCREEN, (server, player, handler, buffer, sender) -> {
             int mouseX = buffer.readInt();
             int mouseY = buffer.readInt();
-            BlockPos pos = buffer.readBlockPos();
             Boolean reforgingScreen = buffer.readBoolean();
-            if (player != null) {
-                if (reforgingScreen)
+            BlockPos pos = reforgingScreen ? ((AnvilScreenHandlerAccess) player.currentScreenHandler).getPos() : ((ReforgeScreenHandler) player.currentScreenHandler).getPos();
+
+            server.execute(() -> {
+                if (reforgingScreen) {
                     player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
                         return new ReforgeScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
                     }, Text.translatable("container.reforge")));
-                else
+                } else
                     player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
                         return new AnvilScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
                     }, Text.translatable("container.repair")));
+
                 writeS2CMousePositionPacket(player, mouseX, mouseY);
-            }
-        });
-        ServerPlayNetworking.registerGlobalReceiver(SYNC_POS_CS, (server, player, handler, buffer, sender) -> {
-            Boolean reforgeHandler = buffer.readBoolean();
-            server.execute(() -> {
-                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                BlockPos pos;
-                if (reforgeHandler)
-                    pos = ((AnvilScreenHandlerAccess) player.currentScreenHandler).getPos();
-                else
-                    pos = ((ReforgeScreenHandler) player.currentScreenHandler).getPos();
-                buf.writeBlockPos(pos);
-                buf.writeBoolean(reforgeHandler);
-                CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(SYNC_POS_SC, buf);
-                handler.sendPacket(packet);
             });
         });
         ServerPlayNetworking.registerGlobalReceiver(REFORGE, (server, player, handler, buffer, sender) -> {

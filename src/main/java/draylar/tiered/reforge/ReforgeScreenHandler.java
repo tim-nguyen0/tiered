@@ -60,7 +60,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
         this.context.run((world, pos) -> {
-            ReforgeScreenHandler.this.pos = pos;
+            ReforgeScreenHandler.this.setPos(pos);
         });
     }
 

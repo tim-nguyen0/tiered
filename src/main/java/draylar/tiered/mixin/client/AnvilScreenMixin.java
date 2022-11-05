@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import draylar.tiered.access.AnvilScreenHandlerAccess;
 import draylar.tiered.config.ConfigInit;
 import draylar.tiered.network.TieredClientPacket;
 import draylar.tiered.reforge.ReforgeScreen;
@@ -43,7 +42,6 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
 
     @Inject(method = "Lnet/minecraft/client/gui/screen/ingame/AnvilScreen;<init>(Lnet/minecraft/screen/AnvilScreenHandler;Lnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/text/Text;)V", at = @At("TAIL"))
     public void initMixin(AnvilScreenHandler handler, PlayerInventory inventory, Text title, CallbackInfo info) {
-        TieredClientPacket.writeC2SSyncPosPacket(true);
     }
 
     @Override
@@ -64,7 +62,7 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.client != null && this.focusedSlot == null && !isBCLibLoaded
                 && this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
-            TieredClientPacket.writeC2SScreenPacket(((AnvilScreenHandlerAccess) handler).getPos(), (int) this.client.mouse.getX(), (int) this.client.mouse.getY(), true);
+            TieredClientPacket.writeC2SScreenPacket((int) this.client.mouse.getX(), (int) this.client.mouse.getY(), true);
 
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -72,7 +70,7 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (button == 0 && isBCLibLoaded && this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
-            TieredClientPacket.writeC2SScreenPacket(((AnvilScreenHandlerAccess) handler).getPos(), (int) this.client.mouse.getX(), (int) this.client.mouse.getY(), true);
+            TieredClientPacket.writeC2SScreenPacket((int) this.client.mouse.getX(), (int) this.client.mouse.getY(), true);
 
         return super.mouseReleased(mouseX, mouseY, button);
     }
