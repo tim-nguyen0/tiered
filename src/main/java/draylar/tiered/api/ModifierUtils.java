@@ -41,6 +41,9 @@ public class ModifierUtils {
                 attributeWeights.add(reforge ? attribute.getWeight() + 1 : attribute.getWeight());
             }
         });
+        if (potentialAttributes.size() <= 0)
+            return null;
+
         if (reforge && attributeWeights.size() > 2) {
             SortList.concurrentSort(attributeWeights, attributeWeights, potentialAttributes);
             int maxWeight = attributeWeights.get(attributeWeights.size() - 1);
