@@ -1,7 +1,5 @@
 package draylar.tiered.reforge;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -98,9 +96,6 @@ public class ReforgeScreenHandler extends ScreenHandler {
     @Override
     public boolean canUse(PlayerEntity player) {
         return this.context.get((world, pos) -> {
-            if (!this.canUse(world.getBlockState((BlockPos) pos))) {
-                return false;
-            }
             return player.squaredDistanceTo((double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5) <= 64.0;
         }, true);
     }
@@ -148,10 +143,6 @@ public class ReforgeScreenHandler extends ScreenHandler {
             slot.onTakeItem(player, itemStack2);
         }
         return itemStack;
-    }
-
-    private boolean canUse(BlockState state) {
-        return state.isOf(Blocks.ANVIL);
     }
 
     public void reforge() {
