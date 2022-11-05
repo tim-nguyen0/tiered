@@ -6,9 +6,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import draylar.tiered.config.ConfigInit;
 import draylar.tiered.network.TieredClientPacket;
@@ -38,10 +35,6 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
 
     public AnvilScreenMixin(AnvilScreenHandler handler, PlayerInventory playerInventory, Text title, Identifier texture) {
         super(handler, playerInventory, title, texture);
-    }
-
-    @Inject(method = "Lnet/minecraft/client/gui/screen/ingame/AnvilScreen;<init>(Lnet/minecraft/screen/AnvilScreenHandler;Lnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/text/Text;)V", at = @At("TAIL"))
-    public void initMixin(AnvilScreenHandler handler, PlayerInventory inventory, Text title, CallbackInfo info) {
     }
 
     @Override
