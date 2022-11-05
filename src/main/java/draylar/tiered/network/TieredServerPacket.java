@@ -17,8 +17,6 @@ import net.minecraft.util.math.BlockPos;
 public class TieredServerPacket {
 
     public static final Identifier SET_SCREEN = new Identifier("tiered", "set_screen");
-    public static final Identifier SYNC_POS_SC = new Identifier("tiered", "sync_pos_sc");
-    public static final Identifier SYNC_POS_CS = new Identifier("tiered", "sync_pos_cs");
     public static final Identifier REFORGE_READY = new Identifier("tiered", "reforge_ready");
     public static final Identifier REFORGE = new Identifier("tiered", "reforge");
     public static final Identifier SET_MOUSE_POSITION = new Identifier("tiered", "set_mouse_position");
