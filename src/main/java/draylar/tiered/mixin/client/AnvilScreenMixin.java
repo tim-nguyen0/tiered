@@ -40,20 +40,21 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         super.drawBackground(matrices, delta, mouseX, mouseY);
+        if (ConfigInit.CONFIG.showReforgingTab) {
+            RenderSystem.setShaderTexture(0, ReforgeScreen.TEXTURE);
+            // anvil icon
+            this.drawTexture(matrices, this.x + ConfigInit.CONFIG.xIconPosition, this.y - 23 + ConfigInit.CONFIG.yIconPosition, 0, 166, 24, 27);
+            // reforge icon
+            this.drawTexture(matrices, this.x + 25 + ConfigInit.CONFIG.xIconPosition, this.y - 21 + ConfigInit.CONFIG.yIconPosition, 48, 166, 24, 21);
 
-        RenderSystem.setShaderTexture(0, ReforgeScreen.TEXTURE);
-        // anvil icon
-        this.drawTexture(matrices, this.x + ConfigInit.CONFIG.xIconPosition, this.y - 23 + ConfigInit.CONFIG.yIconPosition, 0, 166, 24, 27);
-        // reforge icon
-        this.drawTexture(matrices, this.x + 25 + ConfigInit.CONFIG.xIconPosition, this.y - 21 + ConfigInit.CONFIG.yIconPosition, 48, 166, 24, 21);
-
-        if (this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
-            this.renderTooltip(matrices, Text.translatable("screen.tiered.reforging_screen"), mouseX, mouseY);
+            if (this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
+                this.renderTooltip(matrices, Text.translatable("screen.tiered.reforging_screen"), mouseX, mouseY);
+        }
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.client != null && this.focusedSlot == null && !isBCLibLoaded
+        if (this.client != null && ConfigInit.CONFIG.showReforgingTab && this.focusedSlot == null && !isBCLibLoaded
                 && this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
             TieredClientPacket.writeC2SScreenPacket((int) this.client.mouse.getX(), (int) this.client.mouse.getY(), true);
 
@@ -62,7 +63,8 @@ public abstract class AnvilScreenMixin extends ForgingScreen<AnvilScreenHandler>
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0 && isBCLibLoaded && this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
+        if (button == 0 && ConfigInit.CONFIG.showReforgingTab && isBCLibLoaded
+                && this.isPointWithinBounds(26 + ConfigInit.CONFIG.xIconPosition, -20 + ConfigInit.CONFIG.yIconPosition, 22, 19, (double) mouseX, (double) mouseY))
             TieredClientPacket.writeC2SScreenPacket((int) this.client.mouse.getX(), (int) this.client.mouse.getY(), true);
 
         return super.mouseReleased(mouseX, mouseY, button);

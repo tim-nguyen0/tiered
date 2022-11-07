@@ -14,6 +14,7 @@ public class TieredConfig implements ConfigData {
     public float reforge_modifier = 0.9F;
     @Comment("Modify the biggest weights by this modifier per smithing level")
     public float levelz_reforge_modifier = 0.01F;
+    public boolean showReforgingTab = true;
 
     public int xIconPosition = 0;
     public int yIconPosition = 0;
