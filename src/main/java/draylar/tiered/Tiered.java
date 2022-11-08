@@ -13,10 +13,13 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.item.v1.ModifyItemAttributeModifiersCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
@@ -34,9 +37,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
 
 @SuppressWarnings("unused")
 public class Tiered implements ModInitializer {
@@ -51,11 +59,16 @@ public class Tiered implements ModInitializer {
     public static final AttributeDataLoader ATTRIBUTE_DATA_LOADER = new AttributeDataLoader();
 
     public static ScreenHandlerType<ReforgeScreenHandler> REFORGE_SCREEN_HANDLER_TYPE;
-    // public static final ScreenHandlerType<ReforgeScreenHandler> REFORGE_SCREEN_HANDLER_TYPE = ScreenHandlerType.register("smithing", ReforgeScreenHandler::new);
 
-    public static final UUID[] MODIFIERS = new UUID[] { UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"),
-            UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150"), UUID.fromString("4a88bc27-9563-4eeb-96d5-fe50917cc24f"),
-            UUID.fromString("fee48d8c-1b51-4c46-9f4b-c58162623a7a") };
+    // Same UUIDs as in ArmorItem
+    // public static final UUID[] MODIFIERS = new UUID[] { UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"),
+    // UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150"), UUID.fromString("4a88bc27-9563-4eeb-96d5-fe50917cc24f"),
+    // UUID.fromString("fee48d8c-1b51-4c46-9f4b-c58162623a7a") };
+
+    public static final UUID[] MODIFIERS = new UUID[] { UUID.fromString("baf8e074-f7f9-4549-ba1f-e21f82684b8c"), UUID.fromString("9b3416de-98d1-407f-bc6b-e673c2ab5252"),
+            UUID.fromString("1e3ceca6-aa30-4165-9715-20bb63c11348"), UUID.fromString("c99bfa17-4886-4cbb-86c2-ebf9369616d5"), UUID.fromString("19e4dc8d-3892-4ffe-a558-f96c68491144"),
+            UUID.fromString("b1641cff-84ed-4b63-85f8-2634005adc9b"), UUID.fromString("92f546e9-0d00-4159-8c8f-0499e49f5811"), UUID.fromString("e25c7fa8-13b0-4ea0-8db7-e26b78f36c90"),
+            UUID.fromString("2f9dcfce-bd03-4181-86b7-91c88f71e67c") };
 
     public static final Logger LOGGER = LogManager.getLogger();
 
@@ -88,6 +101,35 @@ public class Tiered implements ModInitializer {
         });
         ServerPlayConnectionEvents.INIT.register((handler, server) -> {
             updateItemStackNbt(handler.player.getInventory());
+        });
+        ModifyItemAttributeModifiersCallback.EVENT.register((itemStack, slot, modifiers) -> {
+            if (itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) != null) {
+                Identifier tier = new Identifier(itemStack.getOrCreateSubNbt(Tiered.NBT_SUBTAG_KEY).getString(Tiered.NBT_SUBTAG_DATA_KEY));
+
+                if (!itemStack.hasNbt() || !itemStack.getNbt().contains("AttributeModifiers", 9)) {
+                    PotentialAttribute potentialAttribute = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier);
+                    if (potentialAttribute != null) {
+                        potentialAttribute.getAttributes().forEach(template -> {
+                            // get required equipment slots
+                            if (template.getRequiredEquipmentSlots() != null) {
+                                List<EquipmentSlot> requiredEquipmentSlots = new ArrayList<>(Arrays.asList(template.getRequiredEquipmentSlots()));
+
+                                if (requiredEquipmentSlots.contains(slot))
+                                    template.realize(modifiers, slot);
+                            }
+
+                            // get optional equipment slots
+                            if (template.getOptionalEquipmentSlots() != null) {
+                                List<EquipmentSlot> optionalEquipmentSlots = new ArrayList<>(Arrays.asList(template.getOptionalEquipmentSlots()));
+
+                                // optional equipment slots are valid ONLY IF the equipment slot is valid for the thing
+                                if (optionalEquipmentSlots.contains(slot) && Tiered.isPreferredEquipmentSlot(itemStack, slot))
+                                    template.realize(modifiers, slot);
+                            }
+                        });
+                    }
+                }
+            }
         });
     }
 
