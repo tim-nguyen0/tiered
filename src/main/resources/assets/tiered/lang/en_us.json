@@ -47,10 +47,20 @@
   "text.autoconfig.tiered.option.yIconPosition": "Icon Y Position",
   "text.autoconfig.tiered.option.reforge_modifier": "Reforge Modifier",
   "text.autoconfig.tiered.option.levelz_reforge_modifier": "LevelZ Reforge Modifier",
+  "text.autoconfig.tiered.option.showReforgingTab": "Show Reforging Tab",
 
   "container.reforge": "Reforge Gear",
   "screen.tiered.reforging_screen": "Reforge Gear",
 
   "text.tiered.smithing_info_1_1": "Each skill point increases luck",
-  "text.tiered.smithing_info_1_2": "of reforging by %d%%"
+  "text.tiered.smithing_info_1_2": "of reforging by %d%%",
+
+  "tiered.attribute.modifier.plus.0": "%s %s %s",
+  "tiered.attribute.modifier.plus.1": "%s %s %s",
+  "tiered.attribute.modifier.plus.2": "%s %s %s",
+
+  "tiered.attribute.modifier.equals.0": "%s %s %s",
+  "tiered.attribute.modifier.equals.1": "%s %s %s",
+  "tiered.attribute.modifier.equals.2": "%s %s %s"
+
 }
