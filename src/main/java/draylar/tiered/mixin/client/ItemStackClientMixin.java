@@ -10,6 +10,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -17,7 +18,10 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,11 +30,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @Environment(EnvType.CLIENT)
 @Mixin(ItemStack.class)
 public abstract class ItemStackClientMixin {
@@ -44,12 +51,82 @@ public abstract class ItemStackClientMixin {
     @Shadow
     public abstract NbtCompound getSubNbt(String key);
 
-    private boolean isTiered = false;
+    @Shadow
+    @Final
+    @Mutable
+    public static DecimalFormat MODIFIER_FORMAT;
 
-    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/attribute/EntityAttributeModifier;getValue()D"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private boolean isTiered = false;
+    private String translationKey;
+    private String armorModifierFormat;
+    private Map<String, ArrayList> map = new HashMap<>();
+
+    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 6), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void storeTooltipInformation(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List> info, List list, MutableText mutableText, int i, EquipmentSlot var6[], int var7,
+            int var8, EquipmentSlot equipmentSlot, Multimap<EntityAttribute, EntityAttributeModifier> multimap) {
+        for (Map.Entry<EntityAttribute, EntityAttributeModifier> entry : multimap.entries()) {
+            String translationKey = entry.getKey().getTranslationKey();
+            if (entry.getValue().getName().contains("tiered:") && !map.containsKey(translationKey) && multimap.get(entry.getKey()).size() > 1) {
+                double value = entry.getValue().getValue();
+                String format = MODIFIER_FORMAT.format(
+                        entry.getValue().getOperation() == EntityAttributeModifier.Operation.MULTIPLY_BASE || entry.getValue().getOperation() == EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+                                ? value * 100.0
+                                : (entry.getKey().equals(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) ? value * 10.0 : value));
+
+                ArrayList collect = new ArrayList<>();
+                collect.add(entry.getValue().getOperation().getId()); // Operation Id
+                collect.add(format); // Value formated
+                collect.add(value > 0.0D); // Value greater 0
+                map.put(translationKey, collect);
+            }
+        }
+    }
+
+    @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 8))
+    private boolean modifyTooltip(List<Text> list, Object text) {
+        String translationKey = this.translationKey;
+        if (this.map != null && !this.map.isEmpty() && this.map.containsKey(translationKey)) {
+            if (!this.isTiered) {
+                ArrayList collected = map.get(translationKey);
+                list.add(Text.translatable("tiered.attribute.modifier.plus." + (int) collected.get(0), "§9+" + this.armorModifierFormat,
+                        ((boolean) collected.get(2) ? "§9(+" : "§c(") + (String) collected.get(1) + ((int) collected.get(0) > 0 ? "%)" : ")"),
+                        Text.translatable(translationKey).formatted(Formatting.BLUE)));
+            }
+        } else
+            list.add((Text) text);
+        return true;
+    }
+
+    @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 9))
+    private boolean modifyTooltipTwo(List<Text> list, Object text) {
+        if (this.map != null && !this.map.isEmpty() && this.map.containsKey(this.translationKey)) {
+        } else
+            list.add((Text) text);
+        return true;
+    }
+
+    @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 7))
+    private boolean modifyTooltipThree(List<Text> list, Object text) {
+        if (this.map != null && !this.map.isEmpty() && this.map.containsKey(this.translationKey)) {
+            ArrayList collected = map.get(translationKey);
+            list.add(Text.translatable("tiered.attribute.modifier.equals." + (int) collected.get(0), "§2 " + this.armorModifierFormat,
+                    ((boolean) collected.get(2) ? "§2(+" : "§c(") + (String) collected.get(1) + ((int) collected.get(0) > 0 ? "%)" : ")"),
+                    Text.translatable(translationKey).formatted(Formatting.DARK_GREEN)));
+        } else
+            list.add((Text) text);
+        return true;
+    }
+
+    @Inject(method = "getTooltip", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/attribute/EntityAttributeModifier;getValue()D"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void storeAttributeModifier(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List> cir, List list, MutableText mutableText, int i, EquipmentSlot var6[], int var7,
-            int var8, EquipmentSlot equipmentSlot, Multimap multimap, Iterator var11, Map.Entry entry, EntityAttributeModifier entityAttributeModifier) {
-        isTiered = entityAttributeModifier.getName().contains("tiered:");
+            int var8, EquipmentSlot equipmentSlot, Multimap multimap, Iterator var11, Map.Entry<EntityAttribute, EntityAttributeModifier> entry, EntityAttributeModifier entityAttributeModifier,
+            double d) {
+        this.isTiered = entityAttributeModifier.getName().contains("tiered:");
+        this.translationKey = entry.getKey().getTranslationKey();
+        this.armorModifierFormat = MODIFIER_FORMAT.format(
+                entityAttributeModifier.getOperation() == EntityAttributeModifier.Operation.MULTIPLY_BASE || entityAttributeModifier.getOperation() == EntityAttributeModifier.Operation.MULTIPLY_TOTAL
+                        ? d * 100.0
+                        : (entry.getKey().equals(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) ? d * 10.0 : d));
     }
 
     @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/MutableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 2))
