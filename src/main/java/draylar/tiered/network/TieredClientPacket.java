@@ -28,6 +28,12 @@ public class TieredClientPacket {
                     ((ReforgeScreen) client.currentScreen).reforgeButton.setDisabled(disableButton);
             });
         });
+        ClientPlayNetworking.registerGlobalReceiver(TieredServerPacket.HEALTH, (client, handler, buf, sender) -> {
+            float health = buf.readFloat();
+            client.execute(() -> {
+                client.player.setHealth(health);
+            });
+        });
     }
 
     public static void writeC2SScreenPacket(int mouseX, int mouseY, boolean reforgingScreen) {

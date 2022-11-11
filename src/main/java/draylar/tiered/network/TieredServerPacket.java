@@ -20,6 +20,7 @@ public class TieredServerPacket {
     public static final Identifier REFORGE_READY = new Identifier("tiered", "reforge_ready");
     public static final Identifier REFORGE = new Identifier("tiered", "reforge");
     public static final Identifier SET_MOUSE_POSITION = new Identifier("tiered", "set_mouse_position");
+    public static final Identifier HEALTH = new Identifier("tiered", "health");
 
     public static void init() {
         ServerPlayNetworking.registerGlobalReceiver(SET_SCREEN, (server, player, handler, buffer, sender) -> {
@@ -47,6 +48,13 @@ public class TieredServerPacket {
                     ((ReforgeScreenHandler) player.currentScreenHandler).reforge();
             });
         });
+    }
+
+    public static void writeS2CHealthPacket(ServerPlayerEntity serverPlayerEntity) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeFloat(serverPlayerEntity.getHealth());
+        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(HEALTH, buf);
+        serverPlayerEntity.networkHandler.sendPacket(packet);
     }
 
     public static void writeS2CReforgeReadyPacket(ServerPlayerEntity serverPlayerEntity, boolean disableButton) {
