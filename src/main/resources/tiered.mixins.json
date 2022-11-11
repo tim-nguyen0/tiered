@@ -13,13 +13,13 @@
     "SpectralArrowEntityMixin",
     "LootTableMixin",
     "AnvilScreenHandlerMixin",
-    "MerchantScreenHandlerMixin",
-    "compat.InfoGuiMixin"
+    "MerchantScreenHandlerMixin"
   ],
   "client": [
     "client.ItemStackClientMixin",
     "client.AnvilScreenMixin",
-    "client.MouseMixin"
+    "client.MouseMixin",
+    "compat.InfoGuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

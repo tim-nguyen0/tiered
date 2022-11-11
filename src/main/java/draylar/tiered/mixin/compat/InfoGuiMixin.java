@@ -7,9 +7,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import draylar.tiered.config.ConfigInit;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.levelz.gui.InfoGui;
 import net.minecraft.text.Text;
 
+@Environment(EnvType.CLIENT)
 @Mixin(InfoGui.class)
 public class InfoGuiMixin {
 
