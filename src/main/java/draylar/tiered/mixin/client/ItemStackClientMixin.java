@@ -83,7 +83,7 @@ public abstract class ItemStackClientMixin {
     }
 
     @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 8))
-    private boolean modifyTooltip(List<Text> list, Object text) {
+    private boolean modifyTooltipPlus(List<Text> list, Object text) {
         String translationKey = this.translationKey;
         if (this.map != null && !this.map.isEmpty() && this.map.containsKey(translationKey)) {
             if (!this.isTiered) {
@@ -98,7 +98,7 @@ public abstract class ItemStackClientMixin {
     }
 
     @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 9))
-    private boolean modifyTooltipTwo(List<Text> list, Object text) {
+    private boolean modifyTooltipTake(List<Text> list, Object text) {
         if (this.map != null && !this.map.isEmpty() && this.map.containsKey(this.translationKey)) {
         } else
             list.add((Text) text);
@@ -106,7 +106,7 @@ public abstract class ItemStackClientMixin {
     }
 
     @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 7))
-    private boolean modifyTooltipThree(List<Text> list, Object text) {
+    private boolean modifyTooltipEquals(List<Text> list, Object text) {
         if (this.map != null && !this.map.isEmpty() && this.map.containsKey(this.translationKey)) {
             ArrayList collected = map.get(translationKey);
             list.add(Text.translatable("tiered.attribute.modifier.equals." + (int) collected.get(0), "§2 " + this.armorModifierFormat,
@@ -117,7 +117,7 @@ public abstract class ItemStackClientMixin {
         return true;
     }
 
-    @Inject(method = "getTooltip", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/attribute/EntityAttributeModifier;getValue()D"), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/attribute/EntityAttributeModifier;getOperation()Lnet/minecraft/entity/attribute/EntityAttributeModifier$Operation;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
     private void storeAttributeModifier(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List> cir, List list, MutableText mutableText, int i, EquipmentSlot var6[], int var7,
             int var8, EquipmentSlot equipmentSlot, Multimap multimap, Iterator var11, Map.Entry<EntityAttribute, EntityAttributeModifier> entry, EntityAttributeModifier entityAttributeModifier,
             double d) {
