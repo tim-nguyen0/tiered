@@ -1,7 +1,13 @@
 package draylar.tiered.reforge;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import draylar.tiered.api.TieredItemTags;
 import draylar.tiered.config.ConfigInit;
 import draylar.tiered.network.TieredClientPacket;
 import net.fabricmc.api.EnvType;
@@ -11,12 +17,17 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolItem;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 
 @Environment(EnvType.CLIENT)
 public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implements ScreenHandlerListener {
@@ -54,6 +65,33 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
         super.render(matrices, mouseX, mouseY, delta);
         RenderSystem.disableBlend();
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+
+        if (this.isPointWithinBounds(79, 56, 18, 18, (double) mouseX, (double) mouseY)) {
+            ItemStack itemStack = this.getScreenHandler().getSlot(1).getStack();
+            if (itemStack != null && !itemStack.isEmpty()) {
+                List<ItemStack> list = new ArrayList<ItemStack>();
+                if (itemStack.getItem() instanceof ToolItem)
+                    list.addAll(Arrays.asList(((ToolItem) itemStack.getItem()).getMaterial().getRepairIngredient().getMatchingStacks()));
+                else if (itemStack.getItem() instanceof ArmorItem)
+                    list.addAll(Arrays.asList(((ArmorItem) itemStack.getItem()).getMaterial().getRepairIngredient().getMatchingStacks()));
+                else {
+                    Iterator<RegistryEntry<Item>> iterator = Registry.ITEM.getOrCreateEntryList(TieredItemTags.REFORGE_BASE_ITEM).iterator();
+                    while (iterator.hasNext())
+                        list.add(iterator.next().value().getDefaultStack());
+                }
+                ItemStack ingredient = this.getScreenHandler().getSlot(0).getStack();
+                if (!list.isEmpty()) {
+                    if (ingredient != null && !ingredient.isEmpty() && list.contains(ingredient)) {
+                    } else {
+                        List<Text> tooltip = new ArrayList<Text>();
+                        tooltip.add(Text.translatable("screen.tiered.reforge_ingredient"));
+                        for (int i = 0; i < list.size(); i++)
+                            tooltip.add(list.get(i).getName());
+                        this.renderTooltip(matrices, tooltip, mouseX, mouseY);
+                    }
+                }
+            }
+        }
     }
 
     @Override
