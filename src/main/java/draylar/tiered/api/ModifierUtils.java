@@ -51,6 +51,7 @@ public class ModifierUtils {
                 if (attributeWeights.get(i) > maxWeight / 2)
                     attributeWeights.set(i, (int) (attributeWeights.get(i) * ConfigInit.CONFIG.reforge_modifier));
         }
+        // LevelZ
         if (Tiered.isLevelZLoaded && playerEntity != null) {
             int newMaxWeight = Collections.max(attributeWeights);
             for (int i = 0; i < attributeWeights.size(); i++)
@@ -58,6 +59,14 @@ public class ModifierUtils {
                     attributeWeights.set(i, (int) (attributeWeights.get(i)
                             * (1.0f - ConfigInit.CONFIG.levelz_reforge_modifier * ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("smithing"))));
         }
+        // Luck
+        if (playerEntity != null) {
+            int luckMaxWeight = Collections.max(attributeWeights);
+            for (int i = 0; i < attributeWeights.size(); i++)
+                if (attributeWeights.get(i) > luckMaxWeight / 3)
+                    attributeWeights.set(i, (int) (attributeWeights.get(i) * (1.0f - ConfigInit.CONFIG.luck_reforge_modifier * playerEntity.getLuck())));
+        }
+
         if (potentialAttributes.size() > 0) {
             int totalWeight = 0;
             for (Integer weight : attributeWeights)

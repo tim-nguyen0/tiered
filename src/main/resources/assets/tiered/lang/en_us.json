@@ -47,6 +47,7 @@
   "text.autoconfig.tiered.option.yIconPosition": "Icon Y Position",
   "text.autoconfig.tiered.option.reforge_modifier": "Reforge Modifier",
   "text.autoconfig.tiered.option.levelz_reforge_modifier": "LevelZ Reforge Modifier",
+  "text.autoconfig.tiered.option.luck_reforge_modifier": "Luck Reforge Modifier",
   "text.autoconfig.tiered.option.showReforgingTab": "Show Reforging Tab",
 
   "container.reforge": "Reforge Gear",
