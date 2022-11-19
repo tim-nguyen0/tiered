@@ -7,6 +7,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 
@@ -54,8 +55,24 @@ public abstract class LivingEntityMixin extends Entity {
         while (iterator.hasNext())
             if (iterator.next().getName().contains("tiered:")) {
                 if ((Object) this instanceof ServerPlayerEntity) {
-                    this.setHealth(this.getHealth() > this.getMaxHealth() ? this.getMaxHealth() : this.getHealth());
-                    TieredServerPacket.writeS2CHealthPacket((ServerPlayerEntity) (Object) this);
+                    boolean syncHealth = getEquippedStack(equipmentSlot).isEmpty();
+                    if (!syncHealth) {
+                        ItemStack newItemStack = getEquippedStack(equipmentSlot);
+                        if (!ItemStack.areItemsEqualIgnoreDamage(itemStack, newItemStack))
+                            syncHealth = true;
+                        if (!syncHealth) {
+                            NbtCompound oldNbt = itemStack.getNbt().copy();
+                            oldNbt.remove("Damage");
+                            NbtCompound newNbt = newItemStack.getNbt().copy();
+                            newNbt.remove("Damage");
+                            if (!oldNbt.equals(newNbt))
+                                syncHealth = true;
+                        }
+                    }
+                    if (syncHealth) {
+                        this.setHealth(this.getHealth() > this.getMaxHealth() ? this.getMaxHealth() : this.getHealth());
+                        TieredServerPacket.writeS2CHealthPacket((ServerPlayerEntity) (Object) this);
+                    }
                 }
                 break;
             }
@@ -74,5 +91,8 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow
     public void setHealth(float health) {
     }
+
+    @Shadow
+    public abstract ItemStack getEquippedStack(EquipmentSlot var1);
 
 }
