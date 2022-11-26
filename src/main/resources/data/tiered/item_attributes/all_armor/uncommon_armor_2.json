@@ -1,5 +1,5 @@
 {
-    "id": "tiered:uncommon",
+    "id": "tiered:uncommon_armor_2",
     "verifiers": [
         {
             "tag": "c:helmets"
@@ -12,37 +12,21 @@
         },
         {
             "tag": "c:boots"
-        },
-        {
-            "tag": "c:swords"
-        },
-        {
-            "tag": "c:shovels"
-        },
-        {
-            "tag": "c:pickaxes"
-        },
-        {
-            "tag": "c:hoes"
-        },
-        {
-            "tag": "c:axes"
         }
     ],
-    "weight": 25,
+    "weight": 35,
     "style": {
         "color": "dark_green"
     },
     "attributes": [
         {
-            "type": "generic.max_health",
+            "type": "generic.armor",
             "modifier": {
-                "name": "tiered:uncommon",
+                "name": "tiered:uncommon_armor_2",
                 "operation": "ADDITION",
-                "amount": 2
+                "amount": -1
             },
             "optional_equipment_slots": [
-                "MAINHAND",
                 "FEET",
                 "LEGS",
                 "CHEST",
@@ -50,14 +34,13 @@
             ]
         },
         {
-            "type": "tiered:generic.durable",
+            "type": "generic.max_health",
             "modifier": {
-                "name": "tiered:uncommon",
-                "operation": "MULTIPLY_TOTAL",
-                "amount": 0.1
+                "name": "tiered:uncommon_armor_2",
+                "operation": "ADDITION",
+                "amount": 1
             },
             "optional_equipment_slots": [
-                "MAINHAND",
                 "FEET",
                 "LEGS",
                 "CHEST",
