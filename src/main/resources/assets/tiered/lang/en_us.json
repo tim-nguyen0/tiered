@@ -29,6 +29,11 @@
   "tiered:common_fishing_3.label": "Common",
   "tiered:common_fishing_4.label": "Common",
 
+  "tiered:common_shield_1.label": "Common",
+  "tiered:common_shield_2.label": "Common",
+  "tiered:common_shield_3.label": "Common",
+  "tiered:common_shield_4.label": "Common",
+
   "tiered:uncommon_armor_1.label": "Uncommon",
   "tiered:uncommon_armor_2.label": "Uncommon",
   "tiered:uncommon_armor_3.label": "Uncommon",
@@ -53,6 +58,11 @@
   "tiered:uncommon_fishing_2.label": "Uncommon",
   "tiered:uncommon_fishing_3.label": "Uncommon",
   "tiered:uncommon_fishing_4.label": "Uncommon",
+
+  "tiered:uncommon_shield_1.label": "Uncommon",
+  "tiered:uncommon_shield_2.label": "Uncommon",
+  "tiered:uncommon_shield_3.label": "Uncommon",
+  "tiered:uncommon_shield_4.label": "Uncommon",
 
   "tiered:rare_armor_1.label": "Rare",
   "tiered:rare_armor_2.label": "Rare",
@@ -79,6 +89,11 @@
   "tiered:rare_fishing_3.label": "Rare",
   "tiered:rare_fishing_4.label": "Rare",
 
+  "tiered:rare_shield_1.label": "Rare",
+  "tiered:rare_shield_2.label": "Rare",
+  "tiered:rare_shield_3.label": "Rare",
+  "tiered:rare_shield_4.label": "Rare",
+
   "tiered:epic_armor_1.label": "Epic",
   "tiered:epic_armor_2.label": "Epic",
   "tiered:epic_armor_3.label": "Epic",
@@ -104,46 +119,72 @@
   "tiered:epic_fishing_3.label": "Epic",
   "tiered:epic_fishing_4.label": "Epic",
 
+  "tiered:epic_shield_1.label": "Epic",
+  "tiered:epic_shield_2.label": "Epic",
+  "tiered:epic_shield_3.label": "Epic",
+  "tiered:epic_shield_4.label": "Epic",
+
   "tiered:legendary_armor_1.label": "Legendary",
   "tiered:legendary_armor_2.label": "Legendary",
   "tiered:legendary_armor_3.label": "Legendary",
+  "tiered:legendary_armor_4.label": "Legendary",
 
   "tiered:legendary_tool_1.label": "Legendary",
   "tiered:legendary_tool_2.label": "Legendary",
   "tiered:legendary_tool_3.label": "Legendary",
+  "tiered:legendary_tool_4.label": "Legendary",
 
   "tiered:legendary_melee_1.label": "Legendary",
   "tiered:legendary_melee_2.label": "Legendary",
   "tiered:legendary_melee_3.label": "Legendary",
+  "tiered:legendary_melee_4.label": "Legendary",
 
   "tiered:legendary_ranged_1.label": "Legendary",
   "tiered:legendary_ranged_2.label": "Legendary",
   "tiered:legendary_ranged_3.label": "Legendary",
+  "tiered:legendary_ranged_4.label": "Legendary",
 
   "tiered:legendary_fishing_1.label": "Legendary",
   "tiered:legendary_fishing_2.label": "Legendary",
   "tiered:legendary_fishing_3.label": "Legendary",
+  "tiered:legendary_fishing_4.label": "Legendary",
+
+  "tiered:legendary_shield_1.label": "Legendary",
+  "tiered:legendary_shield_2.label": "Legendary",
+  "tiered:legendary_shield_3.label": "Legendary",
+  "tiered:legendary_shield_4.label": "Legendary",
 
   "tiered:unique_armor_1.label": "Unique",
   "tiered:unique_armor_2.label": "Unique",
+  "tiered:unique_armor_3.label": "Unique",
+  "tiered:unique_armor_4.label": "Unique",
 
   "tiered:unique_tool_1.label": "Unique",
   "tiered:unique_tool_2.label": "Unique",
+  "tiered:unique_tool_3.label": "Unique",
+  "tiered:unique_tool_4.label": "Unique",
 
   "tiered:unique_melee_1.label": "Unique",
   "tiered:unique_melee_2.label": "Unique",
+  "tiered:unique_melee_3.label": "Unique",
+  "tiered:unique_melee_4.label": "Unique",
 
   "tiered:unique_ranged_1.label": "Unique",
   "tiered:unique_ranged_2.label": "Unique",
+  "tiered:unique_ranged_3.label": "Unique",
+  "tiered:unique_ranged_4.label": "Unique",
 
   "tiered:unique_fishing_1.label": "Unique",
   "tiered:unique_fishing_2.label": "Unique",
+  "tiered:unique_fishing_3.label": "Unique",
+  "tiered:unique_fishing_4.label": "Unique",
 
   "tiered:common.label": "Common",
   "tiered:uncommon.label": "Uncommon",
   "tiered:rare.label": "Rare",
   "tiered:epic.label": "Epic",
   "tiered:legendary.label": "Legendary",
+  "tiered:unique.label": "Unique",
 
   "text.autoconfig.tiered.title": "Tiered Config",
   "text.autoconfig.tiered.option.lootContainerModifier": "Loot Container Modifier",
