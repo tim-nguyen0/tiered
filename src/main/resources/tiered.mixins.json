@@ -14,7 +14,7 @@
     "LootTableMixin",
     "AnvilScreenHandlerMixin",
     "MerchantScreenHandlerMixin",
-    "HungerManagerMixin"
+    "BowItemMixin"
   ],
   "client": [
     "client.ItemStackClientMixin",
