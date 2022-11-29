@@ -41,9 +41,13 @@ Tiered is entirely data-driven, which means you can add, modify, and remove modi
 }
 ```
 
+#### Attributes
+
 Tiered currently provides 3 custom attributes: Dig Speed, Crit chance and Durability. Dig Speed increases the speed of your block breaking (think: haste), Crit Chance offers an additional random chance to crit when using a tool and Durability increases, who would have thought it, the durability of an item.
 
-### Verifiers
+Types: `generic.armor`, `generic.armor_toughness`, `generic.dig_speed`, `tiered:generic.durable`, `generic.max_health`, `generic.movement_speed`, `reach-entity-attributes:reach`, `generic.luck`, `generic.attack_damage`, `tiered:generic.crit_chance`, `reach-entity-attributes:attack_range`, `tiered:generic.range_attack_damage`
+
+#### Verifiers
 
 A verifier (specified in the "verifiers" array of your modifier json file) defines whether or not a given tag or tool is valid for the modifier. 
 
@@ -58,13 +62,13 @@ and a tag can be specified with:
 ```
 
 Tiered doesn't provide tags but [AutoTag](https://github.com/apace100/autotag) (which is included in this mod) generates several tags which can be found on the repo [README](https://github.com/apace100/autotag#readme).
-Example tags which AutoTag provides: `c:tools`,`c:pickaxes`,`c:axes`,`c:shovels`,`c:hoes`,`c:swords`,`c:armor`,`c:helmets`,`c:chestplates`,`c:leggings`,`c:boots` and several more.
+Example tags which AutoTag provides: `c:tools`, `c:pickaxes`, `c:axes`, `c:shovels`,`c:hoes`, `c:swords`, `c:armor`, `c:helmets`, `c:chestplates`, `c:leggings`, `c:boots` and several more.
 
-### Weight
+#### Weight
 
 The weight determines the commonness of the tier. Higher weights increase the chance of being applied on the item and vice versa.
 
-### Nbt
+#### Nbt
 
 Custom nbt can get added via nbtValues, an example can be found below. It supports only string, boolean, integer and double values.\ 
 Caution! Once added nbt keys won't get removed when once applied, just the values can get updated!
@@ -73,6 +77,31 @@ Caution! Once added nbt keys won't get removed when once applied, just the value
 "nbtValues": {
   "Damage": 100,
   "key": "value"
+}
+```
+
+#### Tooltip
+Since V1.2, custom tooltip borders can get set via a resource pack.
+- The border texture has to be in the `assets\tiered\textures\gui` folder.
+- The file has to be a json file and put inside the `assets\tiered\tooltips` folder.
+- The `background_gradient` can also get set.
+- Check out the default datapack under `src\main\resources\assets\tiered\tooltips`.
+
+Example:
+```json
+{ 
+    "tooltips": [
+        {
+            "index": 0,
+            "start_border_gradient": "FFBABABA",
+            "end_border_gradient": "FF565656",
+            "texture": "tiered_borders",
+            "decider": [
+                "set_the_id_here",
+                "tiered:common_armor"
+            ]
+        }
+    ]
 }
 ```
 
