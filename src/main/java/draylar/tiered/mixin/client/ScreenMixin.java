@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import draylar.tiered.TieredClient;
 import draylar.tiered.api.BorderTemplate;
+import draylar.tiered.config.ConfigInit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
@@ -47,7 +48,7 @@ public class ScreenMixin {
 
     @Inject(method = "Lnet/minecraft/client/gui/screen/Screen;renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/item/ItemStack;II)V", at = @At("HEAD"), cancellable = true)
     protected void renderTooltipMixin(MatrixStack matrices, ItemStack stack, int x, int y, CallbackInfo info) {
-        if (stack.hasNbt() && stack.getNbt().contains("Tiered")) {
+        if (ConfigInit.CONFIG.tieredTooltip && stack.hasNbt() && stack.getNbt().contains("Tiered")) {
             String nbtString = stack.getNbt().getCompound("Tiered").asString();
             for (int i = 0; i < TieredClient.BORDER_TEMPLATES.size(); i++) {
                 if (!TieredClient.BORDER_TEMPLATES.get(i).containsStack(stack) && TieredClient.BORDER_TEMPLATES.get(i).containsDecider(nbtString)) {
@@ -134,7 +135,7 @@ public class ScreenMixin {
         for (t = 0; t < components.size(); ++t) {
             tooltipComponent2 = components.get(t);
             int nameCentering = 0;
-            if (t == 0)
+            if (t == 0 && ConfigInit.CONFIG.centerName)
                 nameCentering = i / 2 - tooltipComponent2.getWidth(this.textRenderer) / 2;
             tooltipComponent2.drawText(this.textRenderer, l + nameCentering, s, matrix4f, immediate);
             s += tooltipComponent2.getHeight() + (t == 0 ? 2 : 0);
