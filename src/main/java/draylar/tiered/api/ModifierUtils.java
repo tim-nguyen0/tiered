@@ -136,24 +136,24 @@ public class ModifierUtils {
         if (itemStack.hasNbt() && itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) != null) {
 
             Identifier tier = new Identifier(itemStack.getOrCreateSubNbt(Tiered.NBT_SUBTAG_KEY).getString(Tiered.NBT_SUBTAG_DATA_KEY));
+            if (Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier) != null) {
+                HashMap<String, Object> nbtMap = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier).getNbtValues();
+                List<String> nbtKeys = new ArrayList<String>();
+                if (nbtMap != null)
+                    nbtKeys.addAll(nbtMap.keySet().stream().toList());
 
-            HashMap<String, Object> nbtMap = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier).getNbtValues();
-            List<String> nbtKeys = new ArrayList<String>();
-            if (nbtMap != null)
-                nbtKeys.addAll(nbtMap.keySet().stream().toList());
+                List<AttributeTemplate> attributeList = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier).getAttributes();
+                for (int i = 0; i < attributeList.size(); i++)
+                    if (attributeList.get(i).getAttributeTypeID().equals("tiered:generic.durable")) {
+                        nbtKeys.add("durable");
+                        break;
+                    }
 
-            List<AttributeTemplate> attributeList = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier).getAttributes();
-            for (int i = 0; i < attributeList.size(); i++)
-                if (attributeList.get(i).getAttributeTypeID().equals("tiered:generic.durable")) {
-                    nbtKeys.add("durable");
-                    break;
-                }
-
-            if (!nbtKeys.isEmpty())
-                for (int i = 0; i < nbtKeys.size(); i++)
-                    if (!nbtKeys.get(i).equals("Damage"))
-                        itemStack.getNbt().remove(nbtKeys.get(i));
-
+                if (!nbtKeys.isEmpty())
+                    for (int i = 0; i < nbtKeys.size(); i++)
+                        if (!nbtKeys.get(i).equals("Damage"))
+                            itemStack.getNbt().remove(nbtKeys.get(i));
+            }
             itemStack.removeSubNbt(Tiered.NBT_SUBTAG_KEY);
         }
     }
