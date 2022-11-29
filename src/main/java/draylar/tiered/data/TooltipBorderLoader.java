@@ -41,7 +41,7 @@ public class TooltipBorderLoader implements SimpleSynchronousResourceReloadListe
                     List<String> decider = new ArrayList<String>();
 
                     for (int i = 0; i < data2.getAsJsonArray("decider").size(); i++)
-                        decider.add(data2.getAsJsonArray("decider").get(i).getAsString());
+                        decider.add("{Tier:\"" + data2.getAsJsonArray("decider").get(i).getAsString() + "\"}");
 
                     TieredClient.BORDER_TEMPLATES.add(new BorderTemplate(data2.get("index").getAsInt(), data2.get("texture").getAsString(),
                             new BigInteger(data2.get("start_border_gradient").getAsString(), 16).intValue(), new BigInteger(data2.get("end_border_gradient").getAsString(), 16).intValue(),
