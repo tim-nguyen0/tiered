@@ -85,6 +85,7 @@ Since V1.2, custom tooltip borders can get set via a resource pack.
 - The border texture has to be in the `assets\tiered\textures\gui` folder.
 - The file has to be a json file and put inside the `assets\tiered\tooltips` folder.
 - The `background_gradient` can also get set.
+- The gradients has to be hex code, check transparency here: [https://gist.github.com/lopspower/03fb1cc0ac9f32ef38f4](https://gist.github.com/lopspower/03fb1cc0ac9f32ef38f4)
 - Check out the default datapack under `src\main\resources\assets\tiered\tooltips`.
 
 Example:
