@@ -4,6 +4,7 @@
             "index": 0,
             "start_border_gradient": "FFBABABA",
             "end_border_gradient": "FF565656",
+            "texture": "tiered_borders",
             "decider": [
                 "{Tier:\"tiered:common_armor_1\"}",
                 "{Tier:\"tiered:common_armor_2\"}",
@@ -29,13 +30,13 @@
                 "{Tier:\"tiered:common_shield_2\"}",
                 "{Tier:\"tiered:common_shield_3\"}",
                 "{Tier:\"tiered:common_shield_4\"}"
-            ],
-            "texture": "tiered_borders"
+            ]
         },
         {
             "index": 1,
             "start_border_gradient": "FF3FC43A",
             "end_border_gradient": "FF133F2A",
+            "texture": "tiered_borders",
             "decider": [
                 "{Tier:\"tiered:uncommon_armor_1\"}",
                 "{Tier:\"tiered:uncommon_armor_2\"}",
@@ -61,13 +62,13 @@
                 "{Tier:\"tiered:uncommon_shield_2\"}",
                 "{Tier:\"tiered:uncommon_shield_3\"}",
                 "{Tier:\"tiered:uncommon_shield_4\"}"
-            ],
-            "texture": "tiered_borders"
+            ]
         },
         {
             "index": 2,
             "start_border_gradient": "FF163F54",
             "end_border_gradient": "FF163F54",
+            "texture": "tiered_borders",
             "decider": [
                 "{Tier:\"tiered:rare_armor_1\"}",
                 "{Tier:\"tiered:rare_armor_2\"}",
@@ -93,13 +94,13 @@
                 "{Tier:\"tiered:rare_shield_2\"}",
                 "{Tier:\"tiered:rare_shield_3\"}",
                 "{Tier:\"tiered:rare_shield_4\"}"
-            ],
-            "texture": "tiered_borders"
+            ]
         },
         {
             "index": 3,
             "start_border_gradient": "FF380F54",
             "end_border_gradient": "FF380F54",
+            "texture": "tiered_borders",
             "decider": [
                 "{Tier:\"tiered:epic_armor_1\"}",
                 "{Tier:\"tiered:epic_armor_2\"}",
@@ -125,13 +126,13 @@
                 "{Tier:\"tiered:epic_shield_2\"}",
                 "{Tier:\"tiered:epic_shield_3\"}",
                 "{Tier:\"tiered:epic_shield_4\"}"
-            ],
-            "texture": "tiered_borders"
+            ]
         },
         {
             "index": 4,
             "start_border_gradient": "FF6D3C24",
             "end_border_gradient": "FF6D3C24",
+            "texture": "tiered_borders",
             "decider": [
                 "{Tier:\"tiered:legendary_armor_1\"}",
                 "{Tier:\"tiered:legendary_armor_2\"}",
@@ -157,13 +158,13 @@
                 "{Tier:\"tiered:legendary_shield_2\"}",
                 "{Tier:\"tiered:legendary_shield_3\"}",
                 "{Tier:\"tiered:legendary_shield_4\"}"
-            ],
-            "texture": "tiered_borders"
+            ]
         },
         {
             "index": 5,
             "start_border_gradient": "FF5C4C2D",
             "end_border_gradient": "FF5C4C2D",
+            "texture": "tiered_borders",
             "decider": [
                 "{Tier:\"tiered:unique_armor_1\"}",
                 "{Tier:\"tiered:unique_armor_2\"}",
@@ -189,8 +190,7 @@
                 "{Tier:\"tiered:unique_shield_2\"}",
                 "{Tier:\"tiered:unique_shield_3\"}",
                 "{Tier:\"tiered:unique_shield_4\"}"
-            ],
-            "texture": "tiered_borders"
+            ]
         }
     ]
 }

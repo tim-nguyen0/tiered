@@ -13,16 +13,17 @@ public class BorderTemplate {
     private final Identifier identifier;
     private final int startGradient;
     private final int endGradient;
+    private final int backgroundGradient;
     private final List<String> decider;
     private List<ItemStack> stacks = new ArrayList<ItemStack>();
 
-    public BorderTemplate(int index, String texture, int startGradient, int endGradient, List<String> decider) {
+    public BorderTemplate(int index, String texture, int startGradient, int endGradient, int backgroundGradient, List<String> decider) {
         this.index = index;
         this.texture = texture;
         this.identifier = new Identifier("tiered", "textures/gui/" + this.texture + ".png");
         this.startGradient = startGradient;
         this.endGradient = endGradient;
-
+        this.backgroundGradient = backgroundGradient;
         this.decider = new ArrayList<String>();
         this.decider.addAll(decider);
     }
@@ -45,6 +46,10 @@ public class BorderTemplate {
 
     public int getEndGradient() {
         return this.endGradient;
+    }
+
+    public int getBackgroundGradient() {
+        return this.backgroundGradient;
     }
 
     public List<String> getDecider() {

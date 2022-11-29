@@ -44,7 +44,8 @@ public class TooltipBorderLoader implements SimpleSynchronousResourceReloadListe
                         decider.add(data2.getAsJsonArray("decider").get(i).getAsString());
 
                     TieredClient.BORDER_TEMPLATES.add(new BorderTemplate(data2.get("index").getAsInt(), data2.get("texture").getAsString(),
-                            new BigInteger(data2.get("start_border_gradient").getAsString(), 16).intValue(), new BigInteger(data2.get("end_border_gradient").getAsString(), 16).intValue(), decider));
+                            new BigInteger(data2.get("start_border_gradient").getAsString(), 16).intValue(), new BigInteger(data2.get("end_border_gradient").getAsString(), 16).intValue(),
+                            data2.has("background_gradient") ? new BigInteger(data2.get("background_gradient").getAsString(), 16).intValue() : -267386864, decider));
                 }
             } catch (Exception e) {
                 LOGGER.error("Error occurred while loading resource {}. {}", id.toString(), e.toString());
