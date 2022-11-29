@@ -21,6 +21,8 @@
     "client.ItemStackClientMixin",
     "client.AnvilScreenMixin",
     "client.MouseMixin",
+    "client.ScreenMixin",
+    "client.DrawableHelperAccessor",
     "compat.InfoGuiMixin"
   ],
   "injectors": {
