@@ -133,7 +133,10 @@ public class ScreenMixin {
         int s = m;
         for (t = 0; t < components.size(); ++t) {
             tooltipComponent2 = components.get(t);
-            tooltipComponent2.drawText(this.textRenderer, l, s, matrix4f, immediate);
+            int nameCentering = 0;
+            if (t == 0)
+                nameCentering = i / 2 - tooltipComponent2.getWidth(this.textRenderer) / 2;
+            tooltipComponent2.drawText(this.textRenderer, l + nameCentering, s, matrix4f, immediate);
             s += tooltipComponent2.getHeight() + (t == 0 ? 2 : 0);
         }
         immediate.draw();
