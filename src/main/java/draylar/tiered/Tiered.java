@@ -1,12 +1,9 @@
 package draylar.tiered;
 
-import draylar.tiered.api.AttributeTemplate;
-import draylar.tiered.api.CustomEntityAttributes;
-import draylar.tiered.api.ModifierUtils;
-import draylar.tiered.api.TieredItemTags;
+import draylar.tiered.api.*;
 import draylar.tiered.config.ConfigInit;
-import draylar.tiered.api.PotentialAttribute;
 import draylar.tiered.data.AttributeDataLoader;
+import draylar.tiered.data.ReforgeItemDataLoader;
 import draylar.tiered.network.TieredServerPacket;
 import draylar.tiered.reforge.ReforgeScreenHandler;
 import io.netty.buffer.Unpooled;
@@ -18,8 +15,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
@@ -32,19 +27,10 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.Multimap;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class Tiered implements ModInitializer {
@@ -57,6 +43,11 @@ public class Tiered implements ModInitializer {
      * This field is registered to the server's data manager in {@link ServerResourceManagerMixin}
      */
     public static final AttributeDataLoader ATTRIBUTE_DATA_LOADER = new AttributeDataLoader();
+
+    /**
+     * data/tiered/reforge_item
+     */
+    public static final ReforgeItemDataLoader REFORGE_ITEM_DATA_LOADER = new ReforgeItemDataLoader();
 
     public static ScreenHandlerType<ReforgeScreenHandler> REFORGE_SCREEN_HANDLER_TYPE;
 
@@ -73,8 +64,10 @@ public class Tiered implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger();
 
     public static final Identifier ATTRIBUTE_SYNC_PACKET = new Identifier("attribute_sync");
+    public static final Identifier REFORGE_ITEM_SYNC_PACKET = new Identifier("reforge_item_sync");
     public static final String NBT_SUBTAG_KEY = "Tiered";
     public static final String NBT_SUBTAG_DATA_KEY = "Tier";
+    public static final String NBT_SUBTAG_TEMPLATE_DATA_KEY = "Template";
 
     @Override
     public void onInitialize() {
@@ -82,7 +75,9 @@ public class Tiered implements ModInitializer {
         TieredItemTags.init();
         CustomEntityAttributes.init();
         registerAttributeSyncer();
+        registerReforgeItemSyncer();
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(Tiered.ATTRIBUTE_DATA_LOADER);
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(Tiered.REFORGE_ITEM_DATA_LOADER);
 
         REFORGE_SCREEN_HANDLER_TYPE = Registry.register(Registry.SCREEN_HANDLER, "tiered",
                 new ScreenHandlerType<>((syncId, inventory) -> new ReforgeScreenHandler(syncId, inventory, ScreenHandlerContext.EMPTY)));
@@ -190,6 +185,21 @@ public class Tiered implements ModInitializer {
 
             // send packet with attributes to client
             packetSender.sendPacket(ATTRIBUTE_SYNC_PACKET, packet);
+        });
+    }
+
+    public static void registerReforgeItemSyncer() {
+        ServerPlayConnectionEvents.JOIN.register((network, packetSender, minecraftServer) -> {
+            PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+            packet.writeInt(REFORGE_ITEM_DATA_LOADER.getReforgeItems().size());
+
+            // write each value
+            REFORGE_ITEM_DATA_LOADER.getReforgeItems().forEach(reforgeItem -> {
+                packet.writeString(ReforgeItemDataLoader.GSON.toJson(reforgeItem));
+            });
+
+            // send packet with attributes to client
+            packetSender.sendPacket(REFORGE_ITEM_SYNC_PACKET, packet);
         });
     }
 
