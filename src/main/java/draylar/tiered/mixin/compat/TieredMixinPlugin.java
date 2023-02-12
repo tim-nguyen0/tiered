@@ -24,6 +24,8 @@ public class TieredMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (!FabricLoader.getInstance().isModLoaded("levelz") && mixinClassName.contains("InfoGuiMixin"))
             return false;
+        if (!FabricLoader.getInstance().isModLoaded("tooltipfix") && mixinClassName.contains("TieredTooltipMixin"))
+            return false;
 
         return true;
     }

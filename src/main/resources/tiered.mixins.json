@@ -23,7 +23,8 @@
     "client.MouseMixin",
     "client.ScreenMixin",
     "client.DrawableHelperAccessor",
-    "compat.InfoGuiMixin"
+    "compat.InfoGuiMixin",
+    "compat.TieredTooltipMixin"
   ],
   "injectors": {
     "defaultRequire": 1
