@@ -83,7 +83,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
                     this.reforgeReady = items.stream().anyMatch(it -> it.isItemEqualIgnoreDamage(baseItem));
                 else if (item instanceof ToolItem toolItem)
                     this.reforgeReady = toolItem.getMaterial().getRepairIngredient().test(baseItem);
-                else if (item instanceof ArmorItem armorItem)
+                else if (item instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null)
                     this.reforgeReady = armorItem.getMaterial().getRepairIngredient().test(baseItem);
                 else
                     this.reforgeReady = baseItem.isIn(TieredItemTags.REFORGE_BASE_ITEM);
@@ -129,17 +129,15 @@ public class ReforgeScreenHandler extends ScreenHandler {
                     return ItemStack.EMPTY;
                 if (this.getSlot(1).hasStack()) {
                     Item item = this.getSlot(1).getStack().getItem();
-                    if (item instanceof ToolItem toolItem && toolItem.getMaterial().getRepairIngredient().test(itemStack)
-                            && !this.insertItem(itemStack2, 0, 1, false))
+                    if (item instanceof ToolItem toolItem && toolItem.getMaterial().getRepairIngredient().test(itemStack) && !this.insertItem(itemStack2, 0, 1, false))
                         return ItemStack.EMPTY;
-                    if (item instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient().test(itemStack)
+                    if (item instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null && armorItem.getMaterial().getRepairIngredient().test(itemStack)
                             && !this.insertItem(itemStack2, 0, 1, false))
                         return ItemStack.EMPTY;
                     if (itemStack.isIn(TieredItemTags.REFORGE_BASE_ITEM) && !this.insertItem(itemStack2, 0, 1, false))
                         return ItemStack.EMPTY;
                     List<ItemStack> items = Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems(item);
-                    if (items.stream().anyMatch(it -> it.isItemEqualIgnoreDamage(itemStack2.copy()))
-                            && !this.insertItem(itemStack2, 0, 1, false))
+                    if (items.stream().anyMatch(it -> it.isItemEqualIgnoreDamage(itemStack2.copy())) && !this.insertItem(itemStack2, 0, 1, false))
                         return ItemStack.EMPTY;
                 }
                 if (ModifierUtils.getRandomAttributeIDFor(null, itemStack.getItem(), false) != null && !this.insertItem(itemStack2, 1, 2, false))

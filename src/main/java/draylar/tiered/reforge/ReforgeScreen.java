@@ -79,7 +79,7 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
                         baseItems.addAll(items);
                     else if (itemStack.getItem() instanceof ToolItem toolItem)
                         baseItems.addAll(Arrays.asList(toolItem.getMaterial().getRepairIngredient().getMatchingStacks()));
-                    else if (itemStack.getItem() instanceof ArmorItem armorItem)
+                    else if (itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null)
                         baseItems.addAll(Arrays.asList(armorItem.getMaterial().getRepairIngredient().getMatchingStacks()));
                     else {
                         for (RegistryEntry<Item> itemRegistryEntry : Registry.ITEM.getOrCreateEntryList(TieredItemTags.REFORGE_BASE_ITEM))
@@ -93,7 +93,8 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
                 } else {
                     List<Text> tooltip = new ArrayList<Text>();
                     tooltip.add(Text.translatable("screen.tiered.reforge_ingredient"));
-                    for (ItemStack stack : baseItems) tooltip.add(stack.getName());
+                    for (ItemStack stack : baseItems)
+                        tooltip.add(stack.getName());
                     this.renderTooltip(matrices, tooltip, mouseX, mouseY);
                 }
             }
