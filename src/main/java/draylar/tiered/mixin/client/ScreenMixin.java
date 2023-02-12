@@ -16,6 +16,7 @@ import draylar.tiered.api.BorderTemplate;
 import draylar.tiered.config.ConfigInit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -55,7 +56,8 @@ public class ScreenMixin {
                     TieredClient.BORDER_TEMPLATES.get(i).addStack(stack);
                 } else if (TieredClient.BORDER_TEMPLATES.get(i).containsStack(stack)) {
                     List<TooltipComponent> list = getTooltipFromItem(stack).stream().map(Text::asOrderedText).map(TooltipComponent::of).collect(Collectors.toList());
-                    stack.getTooltipData().ifPresent(data -> list.add(1, TooltipComponent.of(data)));
+                    stack.getTooltipData().ifPresent(data -> list.add(1, TooltipComponentCallback.EVENT.invoker().getComponent(data)));
+                    // stack.getTooltipData().ifPresent(data -> list.add(1, TooltipComponent.of(data)));
                     renderTieredTooltipFromComponents(matrices, list, x, y, TieredClient.BORDER_TEMPLATES.get(i));
                     info.cancel();
                     break;
