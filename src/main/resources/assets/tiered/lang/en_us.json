@@ -190,6 +190,8 @@
   "text.autoconfig.tiered.category.default": "Tiered Settings",
   "text.autoconfig.tiered.category.client_settings": "Client Settings",
   "text.autoconfig.tiered.option.lootContainerModifier": "Loot Container Modifier",
+  "text.autoconfig.tiered.option.craftingModifier": "Crafting Modifier",
+  "text.autoconfig.tiered.option.merchantModifier": "Merchant Modifier",
   "text.autoconfig.tiered.option.reforge_modifier": "Reforge Modifier",
   "text.autoconfig.tiered.option.levelz_reforge_modifier": "LevelZ Reforge Modifier",
   "text.autoconfig.tiered.option.luck_reforge_modifier": "Luck Reforge Modifier",

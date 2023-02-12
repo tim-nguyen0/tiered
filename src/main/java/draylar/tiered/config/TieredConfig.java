@@ -11,6 +11,10 @@ public class TieredConfig implements ConfigData {
 
     @Comment("Items in for example mineshaft chests get modifiers")
     public boolean lootContainerModifier = true;
+    @Comment("Crafted items get modifiers")
+    public boolean craftingModifier = true;
+    @Comment("Merchant items get modifiers")
+    public boolean merchantModifier = true;
     @Comment("Decreases the biggest weights by this modifier")
     public float reforge_modifier = 0.9F;
     @Comment("Modify the biggest weights by this modifier per smithing level")

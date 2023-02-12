@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import draylar.tiered.api.ModifierUtils;
+import draylar.tiered.config.ConfigInit;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.MerchantScreenHandler;
 import net.minecraft.screen.ScreenHandler;
@@ -19,7 +20,8 @@ public abstract class MerchantScreenHandlerMixin extends ScreenHandler {
 
     @ModifyVariable(method = "transferSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/MerchantScreenHandler;insertItem(Lnet/minecraft/item/ItemStack;IIZ)Z", ordinal = 0), ordinal = 1)
     private ItemStack transferSlot2Mixin(ItemStack original) {
-        ModifierUtils.setItemStackAttribute(null, original, false);
+        if (ConfigInit.CONFIG.merchantModifier)
+            ModifierUtils.setItemStackAttribute(null, original, false);
         return original;
     }
 }
