@@ -34,7 +34,7 @@ public abstract class ArrowEntityMixin extends PersistentProjectileEntity {
                     if (modifier.getOperation() == EntityAttributeModifier.Operation.ADDITION)
                         rangeDamage += amount;
                     else
-                        rangeDamage *= (amount + 1);
+                        rangeDamage *= (amount + 1.0f);
                 }
                 this.setDamage(rangeDamage);
             }
