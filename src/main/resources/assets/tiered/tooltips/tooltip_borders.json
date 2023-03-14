@@ -162,8 +162,8 @@
         },
         {
             "index": 5,
-            "start_border_gradient": "FF5C4C2D",
-            "end_border_gradient": "FF5C4C2D",
+            "start_border_gradient": "FF77276E",
+            "end_border_gradient": "FF77276E",
             "texture": "tiered_borders",
             "decider": [
                 "tiered:unique_armor_1",
