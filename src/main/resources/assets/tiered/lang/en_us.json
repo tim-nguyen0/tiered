@@ -179,6 +179,11 @@
   "tiered:unique_fishing_3.label": "Unique",
   "tiered:unique_fishing_4.label": "Unique",
 
+  "tiered:unique_shield_1.label": "Unique",
+  "tiered:unique_shield_2.label": "Unique",
+  "tiered:unique_shield_3.label": "Unique",
+  "tiered:unique_shield_4.label": "Unique",
+
   "tiered:common.label": "Common",
   "tiered:uncommon.label": "Uncommon",
   "tiered:rare.label": "Rare",
@@ -214,6 +219,12 @@
 
   "tiered.attribute.modifier.equals.0": "%s %s %s",
   "tiered.attribute.modifier.equals.1": "%s %s %s",
-  "tiered.attribute.modifier.equals.2": "%s %s %s"
+  "tiered.attribute.modifier.equals.2": "%s %s %s",
+
+  "commands.tiered.failed": "Nothing changed. Targets main hand is empty",
+  "commands.tiered.untier_failed": "Nothing changed. %s from %s has no tier",
+  "commands.tiered.untier": "Untiered %s from %s",
+  "commands.tiered.tiering_failed": "Nothing changed. %s from %s has no given tier",
+  "commands.tiered.tier": "Tiered %s from %s"
 
 }

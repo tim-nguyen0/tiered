@@ -1,6 +1,7 @@
 package draylar.tiered;
 
 import draylar.tiered.api.*;
+import draylar.tiered.command.CommandInit;
 import draylar.tiered.config.ConfigInit;
 import draylar.tiered.data.AttributeDataLoader;
 import draylar.tiered.data.ReforgeItemDataLoader;
@@ -74,6 +75,7 @@ public class Tiered implements ModInitializer {
         ConfigInit.init();
         TieredItemTags.init();
         CustomEntityAttributes.init();
+        CommandInit.init();
         registerAttributeSyncer();
         registerReforgeItemSyncer();
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(Tiered.ATTRIBUTE_DATA_LOADER);
