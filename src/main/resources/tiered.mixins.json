@@ -15,7 +15,8 @@
     "AnvilScreenHandlerMixin",
     "MerchantScreenHandlerMixin",
     "BowItemMixin",
-    "CrossbowItemMixin"
+    "CrossbowItemMixin",
+    "ItemFrameEntityMixin"
   ],
   "client": [
     "client.ItemStackClientMixin",
