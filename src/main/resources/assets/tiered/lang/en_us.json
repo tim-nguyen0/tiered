@@ -209,6 +209,7 @@
   "container.reforge": "Reforge Gear",
   "screen.tiered.reforging_screen": "Reforge Gear",
   "screen.tiered.reforge_ingredient": "Requires Ingredient",
+  "screen.tiered.reforge_damaged": "Requires Full Durability",
 
   "text.tiered.smithing_info_1_1": "Each skill point increases luck",
   "text.tiered.smithing_info_1_2": "of reforging by %d%%",

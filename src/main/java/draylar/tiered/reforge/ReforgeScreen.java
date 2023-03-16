@@ -87,16 +87,21 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
                     }
                 }
             }
+            List<Text> tooltip = new ArrayList<Text>();
             if (!baseItems.isEmpty()) {
                 ItemStack ingredient = this.getScreenHandler().getSlot(0).getStack();
                 if (ingredient != null && !ingredient.isEmpty() && baseItems.contains(ingredient)) {
                 } else {
-                    List<Text> tooltip = new ArrayList<Text>();
                     tooltip.add(Text.translatable("screen.tiered.reforge_ingredient"));
                     for (ItemStack stack : baseItems)
                         tooltip.add(stack.getName());
-                    this.renderTooltip(matrices, tooltip, mouseX, mouseY);
                 }
+            }
+            if (itemStack.isDamageable() && itemStack.isDamaged()) {
+                tooltip.add(Text.translatable("screen.tiered.reforge_damaged"));
+            }
+            if (!tooltip.isEmpty()) {
+                this.renderTooltip(matrices, tooltip, mouseX, mouseY);
             }
         }
     }
