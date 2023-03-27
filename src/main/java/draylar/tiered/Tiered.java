@@ -235,13 +235,15 @@ public class Tiered implements ModInitializer {
                     // update durability nbt
 
                     List<AttributeTemplate> attributeList = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(new Identifier(attributeID.toString())).getAttributes();
-                    for (int i = 0; i < attributeList.size(); i++)
+                    for (int i = 0; i < attributeList.size(); i++) {
                         if (attributeList.get(i).getAttributeTypeID().equals("tiered:generic.durable")) {
-                            if (nbtMap == null)
+                            if (nbtMap == null) {
                                 nbtMap = new HashMap<String, Object>();
+                            }
                             nbtMap.put("durable", (double) Math.round(attributeList.get(i).getEntityAttributeModifier().getValue() * 100.0) / 100.0);
                             break;
                         }
+                    }
 
                     // add nbtMap
                     if (nbtMap != null) {
@@ -253,22 +255,23 @@ public class Tiered implements ModInitializer {
                             // json list will get read as ArrayList class
                             // json map will get read as linkedtreemap
                             // json integer is read by gson -> always double
-                            if (value instanceof String)
+                            if (value instanceof String) {
                                 nbtCompound.putString(key, (String) value);
-                            else if (value instanceof Boolean)
+                            } else if (value instanceof Boolean) {
                                 nbtCompound.putBoolean(key, (boolean) value);
-                            else if (value instanceof Double) {
-                                if ((double) value % 1.0 < 0.0001D)
+                            } else if (value instanceof Double) {
+                                if ((double) Math.abs((double) value) % 1.0 < 0.0001D) {
                                     nbtCompound.putInt(key, (int) Math.round((double) value));
-                                else
+                                } else {
                                     nbtCompound.putDouble(key, Math.round((double) value * 100.0) / 100.0);
+                                }
                             }
                         }
                         itemStack.setNbt(nbtCompound);
                     }
-                    if (itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) == null)
+                    if (itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) == null) {
                         itemStack.getOrCreateSubNbt(Tiered.NBT_SUBTAG_KEY).putString(Tiered.NBT_SUBTAG_DATA_KEY, attributeID.toString());
-
+                    }
                     playerInventory.setStack(u, itemStack);
                 }
             }

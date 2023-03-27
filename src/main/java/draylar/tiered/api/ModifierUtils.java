@@ -41,42 +41,51 @@ public class ModifierUtils {
                 attributeWeights.add(reforge ? attribute.getWeight() + 1 : attribute.getWeight());
             }
         });
-        if (potentialAttributes.size() <= 0)
+        if (potentialAttributes.size() <= 0) {
             return null;
+        }
 
         if (reforge && attributeWeights.size() > 2) {
             SortList.concurrentSort(attributeWeights, attributeWeights, potentialAttributes);
             int maxWeight = attributeWeights.get(attributeWeights.size() - 1);
-            for (int i = 0; i < attributeWeights.size(); i++)
-                if (attributeWeights.get(i) > maxWeight / 2)
+            for (int i = 0; i < attributeWeights.size(); i++) {
+                if (attributeWeights.get(i) > maxWeight / 2) {
                     attributeWeights.set(i, (int) (attributeWeights.get(i) * ConfigInit.CONFIG.reforge_modifier));
+                }
+            }
         }
         // LevelZ
         if (Tiered.isLevelZLoaded && playerEntity != null) {
             int newMaxWeight = Collections.max(attributeWeights);
-            for (int i = 0; i < attributeWeights.size(); i++)
-                if (attributeWeights.get(i) > newMaxWeight / 3)
+            for (int i = 0; i < attributeWeights.size(); i++) {
+                if (attributeWeights.get(i) > newMaxWeight / 3) {
                     attributeWeights.set(i, (int) (attributeWeights.get(i)
                             * (1.0f - ConfigInit.CONFIG.levelz_reforge_modifier * ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("smithing"))));
+                }
+            }
         }
         // Luck
         if (playerEntity != null) {
             int luckMaxWeight = Collections.max(attributeWeights);
-            for (int i = 0; i < attributeWeights.size(); i++)
-                if (attributeWeights.get(i) > luckMaxWeight / 3)
+            for (int i = 0; i < attributeWeights.size(); i++) {
+                if (attributeWeights.get(i) > luckMaxWeight / 3) {
                     attributeWeights.set(i, (int) (attributeWeights.get(i) * (1.0f - ConfigInit.CONFIG.luck_reforge_modifier * playerEntity.getLuck())));
+                }
+            }
         }
 
         if (potentialAttributes.size() > 0) {
             int totalWeight = 0;
-            for (Integer weight : attributeWeights)
+            for (Integer weight : attributeWeights) {
                 totalWeight += weight.intValue();
+            }
             int randomChoice = new Random().nextInt(totalWeight);
             SortList.concurrentSort(attributeWeights, attributeWeights, potentialAttributes);
 
             for (int i = 0; i < attributeWeights.size(); i++) {
-                if (randomChoice < attributeWeights.get(i))
+                if (randomChoice < attributeWeights.get(i)) {
                     return potentialAttributes.get(i);
+                }
                 randomChoice -= attributeWeights.get(i);
             }
             // If random choice didn't work
@@ -98,13 +107,16 @@ public class ModifierUtils {
 
                 // add durability nbt
                 List<AttributeTemplate> attributeList = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(new Identifier(potentialAttributeID.toString())).getAttributes();
-                for (int i = 0; i < attributeList.size(); i++)
+                for (int i = 0; i < attributeList.size(); i++) {
                     if (attributeList.get(i).getAttributeTypeID().equals("tiered:generic.durable")) {
-                        if (nbtMap == null)
+                        if (nbtMap == null) {
                             nbtMap = new HashMap<String, Object>();
+                        }
                         nbtMap.put("durable", (double) Math.round(attributeList.get(i).getEntityAttributeModifier().getValue() * 100.0) / 100.0);
                         break;
                     }
+                }
+
                 // add nbtMap
                 if (nbtMap != null) {
                     NbtCompound nbtCompound = stack.getNbt();
@@ -115,15 +127,16 @@ public class ModifierUtils {
                         // json list will get read as ArrayList class
                         // json map will get read as linkedtreemap
                         // json integer is read by gson -> always double
-                        if (value instanceof String)
+                        if (value instanceof String) {
                             nbtCompound.putString(key, (String) value);
-                        else if (value instanceof Boolean)
+                        } else if (value instanceof Boolean) {
                             nbtCompound.putBoolean(key, (boolean) value);
-                        else if (value instanceof Double) {
-                            if ((double) value % 1.0 < 0.0001D)
+                        } else if (value instanceof Double) {
+                            if ((double) Math.abs((double) value) % 1.0 < 0.0001D) {
                                 nbtCompound.putInt(key, (int) Math.round((double) value));
-                            else
+                            } else {
                                 nbtCompound.putDouble(key, Math.round((double) value * 100.0) / 100.0);
+                            }
                         }
                     }
                     stack.setNbt(nbtCompound);
@@ -139,20 +152,25 @@ public class ModifierUtils {
             if (Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier) != null) {
                 HashMap<String, Object> nbtMap = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier).getNbtValues();
                 List<String> nbtKeys = new ArrayList<String>();
-                if (nbtMap != null)
+                if (nbtMap != null) {
                     nbtKeys.addAll(nbtMap.keySet().stream().toList());
+                }
 
                 List<AttributeTemplate> attributeList = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier).getAttributes();
-                for (int i = 0; i < attributeList.size(); i++)
+                for (int i = 0; i < attributeList.size(); i++) {
                     if (attributeList.get(i).getAttributeTypeID().equals("tiered:generic.durable")) {
                         nbtKeys.add("durable");
                         break;
                     }
+                }
 
-                if (!nbtKeys.isEmpty())
-                    for (int i = 0; i < nbtKeys.size(); i++)
-                        if (!nbtKeys.get(i).equals("Damage"))
+                if (!nbtKeys.isEmpty()) {
+                    for (int i = 0; i < nbtKeys.size(); i++) {
+                        if (!nbtKeys.get(i).equals("Damage")) {
                             itemStack.getNbt().remove(nbtKeys.get(i));
+                        }
+                    }
+                }
             }
             itemStack.removeSubNbt(Tiered.NBT_SUBTAG_KEY);
         }

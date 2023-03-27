@@ -20,7 +20,8 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "getMaxDamage", at = @At("TAIL"), cancellable = true)
     private void getMaxDamageMixin(CallbackInfoReturnable<Integer> info) {
-        if (hasNbt() && getNbt().contains("durable"))
+        if (hasNbt() && getNbt().contains("durable")) {
             info.setReturnValue(info.getReturnValue() + (getNbt().getInt("durable") > 0 ? getNbt().getInt("durable") : (int) (getNbt().getFloat("durable") * info.getReturnValue())));
+        }
     }
 }
