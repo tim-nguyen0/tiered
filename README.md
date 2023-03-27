@@ -4,6 +4,9 @@ Tiered is a Fabric mod inspired by [Quality Tools](https://www.curseforge.com/mi
 
 <img src="resources/legendary_chestplate.png" width="400">
 
+### Installation
+Tiered is a mod built for the [Fabric Loader](https://fabricmc.net/). It requires [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api), [AutoTag](https://www.curseforge.com/minecraft/mc-mods/autotag) and [LibZ](https://www.curseforge.com/minecraft/mc-mods/libz) to be installed separately; all other dependencies are installed with the mod.
+
 ### Customization
 
 Tiered is entirely data-driven, which means you can add, modify, and remove modifiers as you see fit. The base path for modifiers is `data/modid/item_attributes`, and tiered modifiers are stored under the modid of tiered. Here's an example modifier called "Hasteful," which grants additional dig speed when any of the valid tools are held:

@@ -10,6 +10,8 @@ import draylar.tiered.config.ConfigInit;
 import draylar.tiered.network.TieredClientPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.libz.api.Tab;
+import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
@@ -28,7 +30,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
 
 @Environment(EnvType.CLIENT)
-public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implements ScreenHandlerListener {
+public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implements ScreenHandlerListener, Tab {
 
     public static final Identifier TEXTURE = new Identifier("tiered", "textures/gui/reforging_screen.png");
     public ReforgeScreen.ReforgeButton reforgeButton;
@@ -138,6 +140,11 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
             TieredClientPacket.writeC2SScreenPacket((int) this.client.mouse.getX(), (int) this.client.mouse.getY(), false);
 
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public Class<?> getParentScreenClass() {
+        return AnvilScreen.class;
     }
 
     public class ReforgeButton extends ButtonWidget {

@@ -27,20 +27,22 @@ public class TieredServerPacket {
             int mouseX = buffer.readInt();
             int mouseY = buffer.readInt();
             Boolean reforgingScreen = buffer.readBoolean();
-            BlockPos pos = reforgingScreen ? ((AnvilScreenHandlerAccess) player.currentScreenHandler).getPos() : ((ReforgeScreenHandler) player.currentScreenHandler).getPos();
+            BlockPos pos = reforgingScreen ? (player.currentScreenHandler instanceof AnvilScreenHandler ? ((AnvilScreenHandlerAccess) player.currentScreenHandler).getPos() : null)
+                    : (player.currentScreenHandler instanceof ReforgeScreenHandler ? ((ReforgeScreenHandler) player.currentScreenHandler).getPos() : null);
+            if (pos != null) {
+                server.execute(() -> {
+                    if (reforgingScreen) {
+                        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
+                            return new ReforgeScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
+                        }, Text.translatable("container.reforge")));
+                    } else
+                        player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
+                            return new AnvilScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
+                        }, Text.translatable("container.repair")));
 
-            server.execute(() -> {
-                if (reforgingScreen) {
-                    player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
-                        return new ReforgeScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
-                    }, Text.translatable("container.reforge")));
-                } else
-                    player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
-                        return new AnvilScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
-                    }, Text.translatable("container.repair")));
-
-                writeS2CMousePositionPacket(player, mouseX, mouseY);
-            });
+                    writeS2CMousePositionPacket(player, mouseX, mouseY);
+                });
+            }
         });
         ServerPlayNetworking.registerGlobalReceiver(REFORGE, (server, player, handler, buffer, sender) -> {
             server.execute(() -> {

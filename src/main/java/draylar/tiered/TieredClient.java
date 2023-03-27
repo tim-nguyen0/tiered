@@ -9,13 +9,19 @@ import draylar.tiered.data.TooltipBorderLoader;
 import draylar.tiered.network.TieredClientPacket;
 import draylar.tiered.reforge.ReforgeScreen;
 import draylar.tiered.reforge.ReforgeScreenHandler;
+import draylar.tiered.reforge.widget.AnvilTab;
+import draylar.tiered.reforge.widget.ReforgeTab;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.loader.api.FabricLoader;
+import net.libz.registry.TabRegistry;
+import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -32,6 +38,11 @@ public class TieredClient implements ClientModInitializer {
 
     public static final List<BorderTemplate> BORDER_TEMPLATES = new ArrayList<BorderTemplate>();
 
+    private static final Identifier ANVIL_TAB_ICON = new Identifier("tiered:textures/gui/anvil_tab_icon.png");
+    private static final Identifier REFORGE_TAB_ICON = new Identifier("tiered:textures/gui/reforge_tab_icon.png");
+
+    public static final boolean isBCLibLoaded = FabricLoader.getInstance().isModLoaded("bclib");
+
     @Override
     public void onInitializeClient() {
         registerAttributeSyncHandler();
@@ -39,6 +50,8 @@ public class TieredClient implements ClientModInitializer {
         HandledScreens.<ReforgeScreenHandler, ReforgeScreen>register(Tiered.REFORGE_SCREEN_HANDLER_TYPE, ReforgeScreen::new);
         TieredClientPacket.init();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new TooltipBorderLoader());
+        TabRegistry.registerOtherTab(new AnvilTab(Text.translatable("container.repair"), ANVIL_TAB_ICON, 0, AnvilScreen.class), AnvilScreen.class);
+        TabRegistry.registerOtherTab(new ReforgeTab(Text.translatable("screen.tiered.reforging_screen"), REFORGE_TAB_ICON, 1, ReforgeScreen.class), AnvilScreen.class);
     }
 
     public static void registerAttributeSyncHandler() {

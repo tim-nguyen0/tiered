@@ -35,6 +35,7 @@
     "minecraft": "1.19.x",
     "java": ">=17",
     "cloth-config2": ">=8.0.75",
-    "autotag-convention": "*"
+    "autotag-convention": "*",
+    "libz": ">=1.0.0"
   }
 }
