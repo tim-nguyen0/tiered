@@ -26,6 +26,8 @@ public class TieredMixinPlugin implements IMixinConfigPlugin {
             return false;
         if (!FabricLoader.getInstance().isModLoaded("tooltipfix") && mixinClassName.contains("TieredTooltipMixin"))
             return false;
+        if (!FabricLoader.getInstance().isModLoaded("easyanvils") && mixinClassName.contains("ModAnvilScreenMixin"))
+            return false;
 
         return true;
     }

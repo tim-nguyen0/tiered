@@ -25,7 +25,8 @@
     "client.ScreenMixin",
     "client.DrawableHelperAccessor",
     "compat.InfoGuiMixin",
-    "compat.TieredTooltipMixin"
+    "compat.TieredTooltipMixin",
+    "compat.ModAnvilScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

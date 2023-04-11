@@ -78,6 +78,10 @@ dependencies {
 	modCompileOnly ("curse.maven:tooltipfix-411557:4087782"),{
     	exclude(group: "net.fabricmc.fabric-api")
   	}
+	// EasyAnvils
+	modCompileOnly ("curse.maven:easy-anvils-682567:4439296"),{
+    	exclude(group: "net.fabricmc.fabric-api")
+  	}
 }
 
 processResources {
