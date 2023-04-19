@@ -1,6 +1,7 @@
 {
     "definitions": [
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 1,
             "startColor": "#BABABA",
             "endColor": "#565656",
@@ -32,6 +33,7 @@
             ]
         },
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 2,
             "startColor": "#3FC43A",
             "endColor": "#133F2A",
@@ -63,6 +65,7 @@
             ]
         },
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 3,
             "startColor": "#163F54",
             "endColor": "#163F54",
@@ -94,6 +97,7 @@
             ]
         },
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 4,
             "startColor": "#380F54",
             "endColor": "#380F54",
@@ -125,6 +129,7 @@
             ]
         },
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 5,
             "startColor": "#6D3C24",
             "endColor": "#6D3C24",
@@ -156,6 +161,7 @@
             ]
         },
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 6,
             "startColor": "#5C4C2D",
             "endColor": "#5C4C2D",
@@ -187,12 +193,14 @@
             ]
         },
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 7,
             "startColor": "#1C265E",
             "endColor": "#1C265E",
             "selectors": []
         },
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 14,
             "startColor": "#100110",
             "endColor": "#100110",
@@ -201,12 +209,14 @@
             ]
         },
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 9,
             "startColor": "#A591B6",
             "endColor": "#A591B6",
             "selectors": []
         },
         {
+            "image": "legendarytooltips:textures/gui/tiered_borders.png",
             "index": 10,
             "startColor": "#FFFADB",
             "endColor": "#FFDFAD",
