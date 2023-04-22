@@ -37,6 +37,12 @@ public class TieredTooltip {
         int i = 0;
         int j = components.size() == 1 ? -2 : 0;
         for (TooltipComponent tooltipComponent : components) {
+
+            // fix crash?
+            if (tooltipComponent == null) {
+                continue;
+            }
+
             k = tooltipComponent.getWidth(textRenderer);
             if (k > i) {
                 i = k;
