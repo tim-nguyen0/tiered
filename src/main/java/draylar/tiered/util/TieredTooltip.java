@@ -38,7 +38,7 @@ public class TieredTooltip {
         int j = components.size() == 1 ? -2 : 0;
         for (TooltipComponent tooltipComponent : components) {
 
-            // fix crash?
+            // fix crash
             if (tooltipComponent == null) {
                 continue;
             }
@@ -103,6 +103,12 @@ public class TieredTooltip {
         int s = m;
         for (t = 0; t < components.size(); ++t) {
             tooltipComponent2 = components.get(t);
+
+            // fix crash
+            if (tooltipComponent2 == null) {
+                continue;
+            }
+
             int nameCentering = 0;
             if (t == 0 && ConfigInit.CONFIG.centerName)
                 nameCentering = i / 2 - tooltipComponent2.getWidth(textRenderer) / 2;
@@ -114,6 +120,12 @@ public class TieredTooltip {
         s = m;
         for (t = 0; t < components.size(); ++t) {
             tooltipComponent2 = components.get(t);
+
+            // fix crash
+            if (tooltipComponent2 == null) {
+                continue;
+            }
+
             tooltipComponent2.drawItems(textRenderer, l, s, matrices, itemRenderer, 400);
             s += tooltipComponent2.getHeight() + (t == 0 ? 2 : 0);
         }
