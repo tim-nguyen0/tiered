@@ -38,7 +38,6 @@ public class TieredTooltip {
         int j = components.size() == 1 ? -2 : 0;
         for (TooltipComponent tooltipComponent : components) {
 
-            // fix crash
             if (tooltipComponent == null) {
                 continue;
             }
@@ -104,7 +103,6 @@ public class TieredTooltip {
         for (t = 0; t < components.size(); ++t) {
             tooltipComponent2 = components.get(t);
 
-            // fix crash
             if (tooltipComponent2 == null) {
                 continue;
             }
@@ -121,7 +119,6 @@ public class TieredTooltip {
         for (t = 0; t < components.size(); ++t) {
             tooltipComponent2 = components.get(t);
 
-            // fix crash
             if (tooltipComponent2 == null) {
                 continue;
             }
