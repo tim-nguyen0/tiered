@@ -27,8 +27,9 @@ public class MobEntityMixin {
         if (ConfigInit.CONFIG.entityItemModifier) {
             for (EquipmentSlot equipmentSlot : EquipmentSlot.values()) {
                 ItemStack itemStack = this.getEquippedStack(equipmentSlot);
-                if (itemStack.isEmpty())
+                if (itemStack.isEmpty()) {
                     continue;
+                }
                 ModifierUtils.setItemStackAttribute(null, itemStack, false);
             }
         }

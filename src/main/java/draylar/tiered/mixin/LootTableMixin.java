@@ -24,20 +24,23 @@ public class LootTableMixin {
 
     @Inject(method = "method_331", at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V", ordinal = 0))
     private static void processStacksMixin(Consumer<ItemStack> lootConsumer, ItemStack itemStack, CallbackInfo info) {
-        if (ConfigInit.CONFIG.lootContainerModifier)
+        if (ConfigInit.CONFIG.lootContainerModifier) {
             ModifierUtils.setItemStackAttribute(null, itemStack, false);
+        }
     }
 
     @Inject(method = "method_331", at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V", ordinal = 1), locals = LocalCapture.CAPTURE_FAILSOFT)
     private static void processStacksMixin(Consumer<ItemStack> lootConsumer, ItemStack itemStack, CallbackInfo info, int i, ItemStack itemStack2) {
-        if (ConfigInit.CONFIG.lootContainerModifier)
+        if (ConfigInit.CONFIG.lootContainerModifier) {
             ModifierUtils.setItemStackAttribute(null, itemStack2, false);
+        }
     }
 
     @Inject(method = "supplyInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Inventory;setStack(ILnet/minecraft/item/ItemStack;)V", ordinal = 1), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void supplyInventoryMixin(Inventory inventory, LootContext context, CallbackInfo info, ObjectArrayList<ItemStack> objectArrayList, Random random, List<Integer> list,
             ObjectListIterator<ItemStack> var6, ItemStack itemStack) {
-        if (ConfigInit.CONFIG.lootContainerModifier)
+        if (ConfigInit.CONFIG.lootContainerModifier) {
             ModifierUtils.setItemStackAttribute(null, itemStack, false);
+        }
     }
 }

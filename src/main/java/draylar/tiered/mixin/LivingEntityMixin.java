@@ -58,15 +58,17 @@ public abstract class LivingEntityMixin extends Entity {
                     boolean syncHealth = getEquippedStack(equipmentSlot).isEmpty();
                     if (!syncHealth) {
                         ItemStack newItemStack = getEquippedStack(equipmentSlot);
-                        if (!ItemStack.areItemsEqualIgnoreDamage(itemStack, newItemStack))
+                        if (!ItemStack.areItemsEqualIgnoreDamage(itemStack, newItemStack)) {
                             syncHealth = true;
+                        }
                         if (!syncHealth) {
                             NbtCompound oldNbt = itemStack.getNbt().copy();
                             oldNbt.remove("Damage");
                             NbtCompound newNbt = newItemStack.getNbt().copy();
                             newNbt.remove("Damage");
-                            if (!oldNbt.equals(newNbt))
+                            if (!oldNbt.equals(newNbt)) {
                                 syncHealth = true;
+                            }
                         }
                     }
                     if (syncHealth) {

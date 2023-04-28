@@ -2,8 +2,8 @@ package draylar.tiered.api;
 
 import draylar.tiered.Tiered;
 import draylar.tiered.config.ConfigInit;
-import draylar.tiered.util.SortList;
 import net.levelz.access.PlayerStatsManagerAccess;
+import net.libz.util.SortList;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
