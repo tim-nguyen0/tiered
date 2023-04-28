@@ -6,7 +6,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -23,12 +22,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.At.Shift;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import draylar.tiered.api.ModifierUtils;
-import draylar.tiered.config.ConfigInit;
 import draylar.tiered.network.TieredServerPacket;
 
 @SuppressWarnings("rawtypes")
@@ -50,13 +46,6 @@ public abstract class LivingEntityMixin extends Entity {
     @Redirect(method = "readCustomDataFromNbt", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;setHealth(F)V"))
     private void readCustomDataFromNbtMixin(LivingEntity livingEntity, float health) {
         this.dataTracker.set(HEALTH, health);
-    }
-
-    @Inject(method = "onEquipStack", at = @At("TAIL"))
-    private void onEquipStackMixin(EquipmentSlot slot, ItemStack oldStack, ItemStack newStack, CallbackInfo info) {
-        if (!this.world.isClient && !((Object) this instanceof PlayerEntity) && ConfigInit.CONFIG.lootContainerModifier) {
-            ModifierUtils.setItemStackAttribute(null, newStack, false);
-        }
     }
 
     @Inject(method = "getEquipmentChanges", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/attribute/AttributeContainer;removeModifiers(Lcom/google/common/collect/Multimap;)V", shift = Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)

@@ -11,6 +11,8 @@ public class TieredConfig implements ConfigData {
 
     @Comment("Items in for example mineshaft chests get modifiers")
     public boolean lootContainerModifier = true;
+    @Comment("Equipped items on entities get modifiers")
+    public boolean entityItemModifier = true;
     @Comment("Crafted items get modifiers")
     public boolean craftingModifier = true;
     @Comment("Merchant items get modifiers")
