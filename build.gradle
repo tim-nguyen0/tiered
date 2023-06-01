@@ -41,31 +41,10 @@ dependencies {
     modImplementation ('com.github.Globox1997:LibZ:c19da208d5'),{
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-
-	// Reach Entity Attributes Draylar
-	// modCompileOnly ("com.github.Draylar:reach-entity-attributes:1.0.2") {
-    //     exclude group: "net.fabricmc.fabric-api"
-    // }
-
-	// Legendary Tooltips
-	// modRuntimeOnly 'com.electronwill.night-config:core:3.6.3'
-	// modRuntimeOnly 'com.electronwill.night-config:toml:3.6.3'
-	// modCompileOnly "com.github.TheElectronWill:night-config:v3.6.5"
-	// //implementation(include('com.electronwill.night-config:core:3.6.3'))
-	// //implementation(include('com.electronwill.night-config:toml:3.6.3'))
-
-	// modRuntimeOnly "curse.maven:forge-config-api-port-fabric-547434:3671141"
-	// modRuntimeOnly "curse.maven:iceberg-fabric-539382:3675784"
-	// modRuntimeOnly "curse.maven:legendary-tooltips-fabric-542478:3675787"
-
 	// Reach Entity Attributes 
 	modImplementation include ("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_attributes_version}"), {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	// Additional Entity Attributes
-	// modImplementation include ("com.github.DaFuqs:AdditionalEntityAttributes:d0cd35d"), {
-	// 	exclude(group: "net.fabricmc.fabric-api")
-	// }
 	// Autotag
 	modImplementation ("com.github.apace100:autotag-api:${autotag_version}")
 	modImplementation ("com.github.apace100:autotag:${autotag_version}")
@@ -82,6 +61,10 @@ dependencies {
 	modCompileOnly ("curse.maven:easy-anvils-682567:4439296"),{
     	exclude(group: "net.fabricmc.fabric-api")
   	}
+	// Additional Entity Attributes
+	// modImplementation include ("com.github.DaFuqs:AdditionalEntityAttributes:d0cd35d"), {
+	// 	exclude(group: "net.fabricmc.fabric-api")
+	// }
 }
 
 processResources {
