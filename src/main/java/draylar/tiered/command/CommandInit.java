@@ -13,12 +13,12 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class CommandInit {
 
@@ -55,7 +55,7 @@ public class CommandInit {
             ItemStack itemStack = serverPlayerEntity.getMainHandStack();
 
             if (itemStack.isEmpty()) {
-                source.sendFeedback(Text.translatable("commands.tiered.failed", serverPlayerEntity.getDisplayName()), true);
+                source.sendFeedback(() -> Text.translatable("commands.tiered.failed", serverPlayerEntity.getDisplayName()), true);
                 continue;
             }
 
@@ -63,22 +63,21 @@ public class CommandInit {
                 if (itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) != null) {
                     ModifierUtils.removeItemStackAttribute(itemStack);
 
-                    source.sendFeedback(Text.translatable("commands.tiered.untier", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
+                    source.sendFeedback(() -> Text.translatable("commands.tiered.untier", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
                 } else {
-                    source.sendFeedback(Text.translatable("commands.tiered.untier_failed", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
+                    source.sendFeedback(() -> Text.translatable("commands.tiered.untier_failed", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
                 }
             } else {
                 ArrayList<Identifier> potentialAttributes = new ArrayList<Identifier>();
                 Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().forEach((id, attribute) -> {
-                    if (attribute.isValid(Registry.ITEM.getId(itemStack.getItem()))) {
+                    if (attribute.isValid(Registries.ITEM.getId(itemStack.getItem()))) {
                         potentialAttributes.add(new Identifier(attribute.getID()));
                     }
                 });
                 if (potentialAttributes.size() <= 0) {
-                    source.sendFeedback(Text.translatable("commands.tiered.tiering_failed", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
+                    source.sendFeedback(() -> Text.translatable("commands.tiered.tiering_failed", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
                     continue;
                 } else {
-                    System.out.println("TEST1");
 
                     List<Identifier> potentialTier = new ArrayList<Identifier>();
                     for (int i = 0; i < potentialAttributes.size(); i++) {
@@ -89,18 +88,15 @@ public class CommandInit {
                             potentialTier.add(potentialAttributes.get(i));
                         }
                     }
-                    System.out.println("TEST2");
 
                     if (potentialTier.size() <= 0) {
-                        source.sendFeedback(Text.translatable("commands.tiered.tiering_failed", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
+                        source.sendFeedback(() -> Text.translatable("commands.tiered.tiering_failed", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
                         continue;
                     } else {
-                        System.out.println("TEST3");
 
                         ModifierUtils.removeItemStackAttribute(itemStack);
 
-                        System.out.println("TEST4");
-                        Identifier attribute = potentialTier.get(serverPlayerEntity.world.getRandom().nextInt(potentialTier.size()));
+                        Identifier attribute = potentialTier.get(serverPlayerEntity.getWorld().getRandom().nextInt(potentialTier.size()));
                         if (attribute != null) {
                             itemStack.getOrCreateSubNbt(Tiered.NBT_SUBTAG_KEY).putString(Tiered.NBT_SUBTAG_DATA_KEY, attribute.toString());
 
@@ -138,7 +134,7 @@ public class CommandInit {
                                 }
                                 itemStack.setNbt(nbtCompound);
                             }
-                            source.sendFeedback(Text.translatable("commands.tiered.tier", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
+                            source.sendFeedback(() -> Text.translatable("commands.tiered.tier", itemStack.getItem().getName(itemStack).getString(), serverPlayerEntity.getDisplayName()), true);
                         }
                     }
                 }

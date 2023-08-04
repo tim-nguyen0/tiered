@@ -19,7 +19,7 @@ public abstract class TridentEntityMixin extends PersistentProjectileEntity {
         super(entityType, world);
     }
 
-    @ModifyVariable(method = "onEntityHit", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/damage/DamageSource;trident(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/Entity;)Lnet/minecraft/entity/damage/DamageSource;"), ordinal = 0)
+    @ModifyVariable(method = "onEntityHit", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getAttackDamage(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/EntityGroup;)F"), ordinal = 0)
     private float onEntityHitMixin(float original) {
         if (this.getOwner() instanceof ServerPlayerEntity) {
             return AttributeHelper.getExtraRangeDamage((PlayerEntity) this.getOwner(), original);

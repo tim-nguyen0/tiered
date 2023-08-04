@@ -58,7 +58,7 @@ public abstract class LivingEntityMixin extends Entity {
                     boolean syncHealth = getEquippedStack(equipmentSlot).isEmpty();
                     if (!syncHealth) {
                         ItemStack newItemStack = getEquippedStack(equipmentSlot);
-                        if (!ItemStack.areItemsEqualIgnoreDamage(itemStack, newItemStack)) {
+                        if (!itemStack.isOf(newItemStack.getItem())) {
                             syncHealth = true;
                         }
                         if (!syncHealth) {

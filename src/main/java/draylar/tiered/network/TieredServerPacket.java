@@ -33,11 +33,11 @@ public class TieredServerPacket {
                 server.execute(() -> {
                     if (reforgingScreen) {
                         player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
-                            return new ReforgeScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
+                            return new ReforgeScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.getWorld(), pos));
                         }, Text.translatable("container.reforge")));
                     } else
                         player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerx) -> {
-                            return new AnvilScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.world, pos));
+                            return new AnvilScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.getWorld(), pos));
                         }, Text.translatable("container.repair")));
 
                     writeS2CMousePositionPacket(player, mouseX, mouseY);

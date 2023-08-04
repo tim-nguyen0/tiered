@@ -3,7 +3,8 @@ package draylar.tiered.api;
 import draylar.tiered.Tiered;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 public class CustomEntityAttributes {
 
@@ -17,6 +18,6 @@ public class CustomEntityAttributes {
     }
 
     private static EntityAttribute register(EntityAttribute attribute) {
-        return Registry.register(Registry.ATTRIBUTE, Tiered.id(attribute.getTranslationKey()), attribute);
+        return Registry.register(Registries.ATTRIBUTE, Tiered.id(attribute.getTranslationKey()), attribute);
     }
 }

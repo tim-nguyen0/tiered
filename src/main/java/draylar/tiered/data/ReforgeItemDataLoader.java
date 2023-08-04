@@ -9,12 +9,12 @@ import draylar.tiered.api.ReforgeItem;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.resource.JsonDataLoader;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntryList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,9 +54,7 @@ public class ReforgeItemDataLoader extends JsonDataLoader implements SimpleSynch
         }
         reforgeItems.clear();
         reforgeItems.addAll(readReforgeItems.values().stream()
-                .sorted(Comparator.comparing(ReforgeItem::isCover)
-                        .thenComparing(a -> a.getProduct().getId() == null ? "" : a.getProduct().getId()).reversed()
-                ).toList());
+                .sorted(Comparator.comparing(ReforgeItem::isCover).thenComparing(a -> a.getProduct().getId() == null ? "" : a.getProduct().getId()).reversed()).toList());
         LOGGER.info(LOADED_MESSAGE, reforgeItems.size());
     }
 
@@ -65,7 +63,7 @@ public class ReforgeItemDataLoader extends JsonDataLoader implements SimpleSynch
     }
 
     public List<ItemStack> getReforgeItems(Item product) {
-        List<ReforgeItem> filtered = reforgeItems.stream().filter(it -> it.getProduct().isValid(Registry.ITEM.getId(product))).toList();
+        List<ReforgeItem> filtered = reforgeItems.stream().filter(it -> it.getProduct().isValid(Registries.ITEM.getId(product))).toList();
         if (filtered.stream().anyMatch(ReforgeItem::isCover)) {
             filtered = filtered.stream().filter(ReforgeItem::isCover).findFirst().stream().toList();
         }
@@ -77,10 +75,10 @@ public class ReforgeItemDataLoader extends JsonDataLoader implements SimpleSynch
         Set<ItemStack> bases = new HashSet<>();
         for (ItemVerifier verifier : itemVerifiers) {
             if (verifier.getId() != null) {
-                Optional<Item> item = Registry.ITEM.getOrEmpty(Identifier.tryParse(verifier.getId()));
+                Optional<Item> item = Registries.ITEM.getOrEmpty(Identifier.tryParse(verifier.getId()));
                 item.ifPresent(value -> bases.add(value.getDefaultStack()));
-            } else if(verifier.getTagKey() != null) {
-                Optional<RegistryEntryList.Named<Item>> entryList = Registry.ITEM.getEntryList(verifier.getTagKey());
+            } else if (verifier.getTagKey() != null) {
+                Optional<RegistryEntryList.Named<Item>> entryList = Registries.ITEM.getEntryList(verifier.getTagKey());
                 entryList.ifPresent(value -> bases.addAll(value.stream().map(it -> it.value().getDefaultStack()).toList()));
             }
         }

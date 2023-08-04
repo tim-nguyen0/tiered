@@ -65,7 +65,7 @@ public class AttributeHelper {
                 customChance += (float) modifier.getValue();
             }
         }
-        if (playerEntity.world.getRandom().nextFloat() > (1.0f - Math.abs(customChance))) {
+        if (playerEntity.getWorld().getRandom().nextFloat() > (1.0f - Math.abs(customChance))) {
             float extraCrit = oldDamage;
             if (customChance < 0.0f) {
                 extraCrit = extraCrit / 2.0f;

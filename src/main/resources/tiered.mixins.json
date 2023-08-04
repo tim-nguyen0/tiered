@@ -24,9 +24,9 @@
     "client.ItemStackClientMixin",
     "client.AnvilScreenMixin",
     "client.MouseMixin",
-    "client.ScreenMixin",
-    "client.DrawableHelperAccessor",
-    "compat.InfoGuiMixin",
+    "client.DrawContextMixin",
+    "client.HandledScreenMixin",
+    "compat.SkillInfoScreenMixin",
     "compat.TieredTooltipMixin",
     "compat.ModAnvilScreenMixin"
   ],

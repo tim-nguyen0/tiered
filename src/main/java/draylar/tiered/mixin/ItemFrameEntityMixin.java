@@ -22,7 +22,7 @@ public abstract class ItemFrameEntityMixin extends AbstractDecorationEntity {
 
     @Inject(method = "Lnet/minecraft/entity/decoration/ItemFrameEntity;setHeldItemStack(Lnet/minecraft/item/ItemStack;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/decoration/ItemFrameEntity;setAsStackHolder(Lnet/minecraft/item/ItemStack;)V"))
     private void setHeldItemStackMixin(ItemStack value, boolean update, CallbackInfo info) {
-        if (!this.world.isClient && !update && ConfigInit.CONFIG.lootContainerModifier) {
+        if (!this.getWorld().isClient() && !update && ConfigInit.CONFIG.lootContainerModifier) {
             ModifierUtils.setItemStackAttribute(null, value, false);
         }
     }

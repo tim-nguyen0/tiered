@@ -3,9 +3,10 @@ package draylar.tiered.api;
 import draylar.tiered.Tiered;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class ItemVerifier {
 
@@ -41,11 +42,11 @@ public class ItemVerifier {
         if (id != null) {
             return itemID.equals(id);
         } else if (tag != null) {
-            TagKey<Item> itemTag = TagKey.of(Registry.ITEM_KEY, new Identifier(tag));
+            TagKey<Item> itemTag = TagKey.of(RegistryKeys.ITEM, new Identifier(tag));
             // TagKey<Item> itemTag = ItemTags.getTagGroup().getTag(new Identifier(tag));
 
             if (itemTag != null) {
-                return new ItemStack(Registry.ITEM.get(new Identifier(itemID))).isIn(itemTag);// itemTag.contains(Registry.ITEM.get(new Identifier(itemID)));
+                return new ItemStack(Registries.ITEM.get(new Identifier(itemID))).isIn(itemTag);// itemTag.contains(Registry.ITEM.get(new Identifier(itemID)));
             } else {
                 Tiered.LOGGER.error(tag + " was specified as an item verifier tag, but it does not exist!");
             }
@@ -59,7 +60,7 @@ public class ItemVerifier {
     }
 
     public TagKey<Item> getTagKey() {
-        return TagKey.of(Registry.ITEM_KEY, new Identifier(tag));
+        return TagKey.of(RegistryKeys.ITEM, new Identifier(tag));
     }
 
     @Override

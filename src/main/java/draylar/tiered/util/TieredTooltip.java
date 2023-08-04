@@ -2,34 +2,24 @@ package draylar.tiered.util;
 
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import org.joml.Vector2ic;
 
 import draylar.tiered.api.BorderTemplate;
 import draylar.tiered.config.ConfigInit;
-import draylar.tiered.mixin.client.DrawableHelperAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Matrix4f;
+import net.minecraft.client.gui.tooltip.TooltipPositioner;
 
 @Environment(EnvType.CLIENT)
 public class TieredTooltip {
 
-    public static void renderTieredTooltipFromComponents(MatrixStack matrices, List<TooltipComponent> components, int x, int y, int width, int height, BorderTemplate borderTemplate,
-            TextRenderer textRenderer, ItemRenderer itemRenderer) {
+    public static void renderTieredTooltipFromComponents(DrawContext context, TextRenderer textRenderer, List<TooltipComponent> components, int x, int y, TooltipPositioner positioner,
+            BorderTemplate borderTemplate) {
         TooltipComponent tooltipComponent2;
-        int t;
+        int r;
         int k;
         if (components.isEmpty()) {
             return;
@@ -37,119 +27,115 @@ public class TieredTooltip {
         int i = 0;
         int j = components.size() == 1 ? -2 : 0;
         for (TooltipComponent tooltipComponent : components) {
-
             if (tooltipComponent == null) {
                 continue;
             }
-
             k = tooltipComponent.getWidth(textRenderer);
             if (k > i) {
                 i = k;
             }
             j += tooltipComponent.getHeight();
         }
-        if (i < 64)
+        if (i < 64) {
             i = 64;
-        if (j < 16)
+        }
+        if (j < 16) {
             j = 16;
+        }
 
-        int l = x + 12;
-        int m = y - 12;
-        k = i;
-        int n = j;
-        if (l + i > width) {
-            l -= 28 + i;
-        }
-        if (m + n + 6 > height) {
-            m = height - n - 6;
-        }
-        matrices.push();
-        float f = itemRenderer.zOffset;
-        itemRenderer.zOffset = 400.0f;
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        Matrix4f matrix4f = matrices.peek().getPositionMatrix();
+        int l = i;
+        int m = j;
+
+        Vector2ic vector2ic = positioner.getPosition(context.getScaledWindowWidth(), context.getScaledWindowHeight(), x, y, l, m);
+        int n = vector2ic.x();
+        int o = vector2ic.y();
+        context.getMatrices().push();
 
         int backgroundColor = borderTemplate.getBackgroundGradient();
-        // background
-        DrawableHelperAccessor.callFillGradient(matrix4f, bufferBuilder, l - 3, m - 4, l + k + 3, m - 3, 400, backgroundColor, backgroundColor);
-        DrawableHelperAccessor.callFillGradient(matrix4f, bufferBuilder, l - 3, m + n + 3, l + k + 3, m + n + 4, 400, backgroundColor, backgroundColor);
-        DrawableHelperAccessor.callFillGradient(matrix4f, bufferBuilder, l - 3, m - 3, l + k + 3, m + n + 3, 400, backgroundColor, backgroundColor);
-        DrawableHelperAccessor.callFillGradient(matrix4f, bufferBuilder, l - 4, m - 3, l - 3, m + n + 3, 400, backgroundColor, backgroundColor);
-        DrawableHelperAccessor.callFillGradient(matrix4f, bufferBuilder, l + k + 3, m - 3, l + k + 4, m + n + 3, 400, backgroundColor, backgroundColor);
-
         int colorStart = borderTemplate.getStartGradient();
         int colorEnd = borderTemplate.getEndGradient();
 
-        // border
-        DrawableHelperAccessor.callFillGradient(matrix4f, bufferBuilder, l - 3, m - 3 + 1, l - 3 + 1, m + n + 3 - 1, 400, colorStart, colorEnd);
-        DrawableHelperAccessor.callFillGradient(matrix4f, bufferBuilder, l + k + 2, m - 3 + 1, l + k + 3, m + n + 3 - 1, 400, colorStart, colorEnd);
-        DrawableHelperAccessor.callFillGradient(matrix4f, bufferBuilder, l - 3, m - 3, l + k + 3, m - 3 + 1, 400, colorStart, colorStart);
-        DrawableHelperAccessor.callFillGradient(matrix4f, bufferBuilder, l - 3, m + n + 2, l + k + 3, m + n + 3, 400, colorEnd, colorEnd);
+        renderTooltipBackground(context, n, o, l, m, 400, backgroundColor, colorStart, colorEnd);
+        context.getMatrices().translate(0.0f, 0.0f, 400.0f);
+        int q = o;
 
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableTexture();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        BufferRenderer.drawWithShader(bufferBuilder.end());
-        RenderSystem.disableBlend();
-        RenderSystem.enableTexture();
-
-        VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-        matrices.translate(0.0, 0.0, 400.0);
-        int s = m;
-        for (t = 0; t < components.size(); ++t) {
-            tooltipComponent2 = components.get(t);
-
-            if (tooltipComponent2 == null) {
-                continue;
-            }
-
+        for (r = 0; r < components.size(); ++r) {
             int nameCentering = 0;
-            if (t == 0 && ConfigInit.CONFIG.centerName)
+            tooltipComponent2 = components.get(r);
+            if (r == 0 && ConfigInit.CONFIG.centerName)
                 nameCentering = i / 2 - tooltipComponent2.getWidth(textRenderer) / 2;
-            tooltipComponent2.drawText(textRenderer, l + nameCentering, s, matrix4f, immediate);
-            s += tooltipComponent2.getHeight() + (t == 0 ? 2 : 0);
-        }
-        immediate.draw();
-        matrices.pop();
-        s = m;
-        for (t = 0; t < components.size(); ++t) {
-            tooltipComponent2 = components.get(t);
 
-            if (tooltipComponent2 == null) {
-                continue;
-            }
-
-            tooltipComponent2.drawItems(textRenderer, l, s, matrices, itemRenderer, 400);
-            s += tooltipComponent2.getHeight() + (t == 0 ? 2 : 0);
+            tooltipComponent2.drawText(textRenderer, n + nameCentering, q, context.getMatrices().peek().getPositionMatrix(), context.getVertexConsumers());
+            q += tooltipComponent2.getHeight() + (r == 0 ? 2 : 0);
         }
-        itemRenderer.zOffset = f;
+        q = o;
+        for (r = 0; r < components.size(); ++r) {
+            tooltipComponent2 = components.get(r);
+            tooltipComponent2.drawItems(textRenderer, n, q, context);
+            q += tooltipComponent2.getHeight() + (r == 0 ? 2 : 0);
+        }
+        context.getMatrices().pop();
 
         int border = borderTemplate.getIndex();
         int secondHalf = border > 7 ? 1 : 0;
-        if (border > 7)
+        if (border > 7) {
             border -= 8;
+        }
 
-        matrices.push();
-        RenderSystem.setShaderTexture(0, borderTemplate.getIdentifier());
+        context.getMatrices().push();
+        context.getMatrices().translate(0.0f, 0.0f, 400.0f);
         // left top corner
-        DrawableHelper.drawTexture(matrices, l - 6, m - 6, 0 + secondHalf * 64, 0 + border * 16, 8, 8, 128, 128);
+        context.drawTexture(borderTemplate.getIdentifier(), n - 6, o - 6, 0 + secondHalf * 64, 0 + border * 16, 8, 8, 128, 128);
         // right top corner
-        DrawableHelper.drawTexture(matrices, l + k - 2, m - 6, 56 + secondHalf * 64, 0 + border * 16, 8, 8, 128, 128);
+        context.drawTexture(borderTemplate.getIdentifier(), n + l - 2, o - 6, 56 + secondHalf * 64, 0 + border * 16, 8, 8, 128, 128);
 
         // left down corner
-        DrawableHelper.drawTexture(matrices, l - 6, m + n - 2, 0 + secondHalf * 64, 8 + border * 16, 8, 8, 128, 128);
+        context.drawTexture(borderTemplate.getIdentifier(), n - 6, o + m - 2, 0 + secondHalf * 64, 8 + border * 16, 8, 8, 128, 128);
         // right down corner
-        DrawableHelper.drawTexture(matrices, l + k - 2, m + n - 2, 56 + secondHalf * 64, 8 + border * 16, 8, 8, 128, 128);
+        context.drawTexture(borderTemplate.getIdentifier(), n + l - 2, o + m - 2, 56 + secondHalf * 64, 8 + border * 16, 8, 8, 128, 128);
 
         // middle header
-        DrawableHelper.drawTexture(matrices, (l - 6 + l + k + 6) / 2 - 24, m - 9, 8 + secondHalf * 64, 0 + border * 16, 48, 8, 128, 128);
+        context.drawTexture(borderTemplate.getIdentifier(), (n - 6 + n + l + 6) / 2 - 24, o - 9, 8 + secondHalf * 64, 0 + border * 16, 48, 8, 128, 128);
         // bottom footer
-        DrawableHelper.drawTexture(matrices, (l - 6 + l + k + 6) / 2 - 24, m + n + 1, 8 + secondHalf * 64, 8 + border * 16, 48, 8, 128, 128);
+        context.drawTexture(borderTemplate.getIdentifier(), (n - 6 + n + l + 6) / 2 - 24, o + m + 1, 8 + secondHalf * 64, 8 + border * 16, 48, 8, 128, 128);
 
-        matrices.pop();
+        context.getMatrices().pop();
     }
+
+    private static void renderTooltipBackground(DrawContext context, int x, int y, int width, int height, int z, int backgroundColor, int colorStart, int colorEnd) {
+        int i = x - 3;
+        int j = y - 3;
+        int k = width + 6;
+        int l = height + 6;
+        renderHorizontalLine(context, i, j - 1, k, z, backgroundColor);
+        renderHorizontalLine(context, i, j + l, k, z, backgroundColor);
+        renderRectangle(context, i, j, k, l, z, backgroundColor);
+        renderVerticalLine(context, i - 1, j, l, z, backgroundColor);
+        renderVerticalLine(context, i + k, j, l, z, backgroundColor);
+        renderBorder(context, i, j + 1, k, l, z, colorStart, colorEnd);
+    }
+
+    private static void renderBorder(DrawContext context, int x, int y, int width, int height, int z, int startColor, int endColor) {
+        renderVerticalLine(context, x, y, height - 2, z, startColor, endColor);
+        renderVerticalLine(context, x + width - 1, y, height - 2, z, startColor, endColor);
+        renderHorizontalLine(context, x, y - 1, width, z, startColor);
+        renderHorizontalLine(context, x, y - 1 + height - 1, width, z, endColor);
+    }
+
+    private static void renderVerticalLine(DrawContext context, int x, int y, int height, int z, int color) {
+        context.fill(x, y, x + 1, y + height, z, color);
+    }
+
+    private static void renderVerticalLine(DrawContext context, int x, int y, int height, int z, int startColor, int endColor) {
+        context.fillGradient(x, y, x + 1, y + height, z, startColor, endColor);
+    }
+
+    private static void renderHorizontalLine(DrawContext context, int x, int y, int width, int z, int color) {
+        context.fill(x, y, x + width, y + 1, z, color);
+    }
+
+    private static void renderRectangle(DrawContext context, int x, int y, int width, int height, int z, int color) {
+        context.fill(x, y, x + width, y + height, z, color);
+    }
+
 }

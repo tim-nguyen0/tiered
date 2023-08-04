@@ -11,23 +11,22 @@ import draylar.tiered.network.TieredClientPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.libz.api.Tab;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
 
 @Environment(EnvType.CLIENT)
 public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implements ScreenHandlerListener, Tab {
@@ -62,11 +61,12 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        this.renderBackground(context);
+        super.render(context, mouseX, mouseY, delta);
         RenderSystem.disableBlend();
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
 
         if (this.isPointWithinBounds(79, 56, 18, 18, (double) mouseX, (double) mouseY)) {
             ItemStack itemStack = this.getScreenHandler().getSlot(1).getStack();
@@ -77,15 +77,16 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
                     last = itemStack;
                     baseItems = new ArrayList<ItemStack>();
                     List<ItemStack> items = Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems(itemStack.getItem());
-                    if (!items.isEmpty())
+                    if (!items.isEmpty()) {
                         baseItems.addAll(items);
-                    else if (itemStack.getItem() instanceof ToolItem toolItem)
+                    } else if (itemStack.getItem() instanceof ToolItem toolItem) {
                         baseItems.addAll(Arrays.asList(toolItem.getMaterial().getRepairIngredient().getMatchingStacks()));
-                    else if (itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null)
+                    } else if (itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null) {
                         baseItems.addAll(Arrays.asList(armorItem.getMaterial().getRepairIngredient().getMatchingStacks()));
-                    else {
-                        for (RegistryEntry<Item> itemRegistryEntry : Registry.ITEM.getOrCreateEntryList(TieredItemTags.REFORGE_BASE_ITEM))
+                    } else {
+                        for (RegistryEntry<Item> itemRegistryEntry : Registries.ITEM.getOrCreateEntryList(TieredItemTags.REFORGE_BASE_ITEM)) {
                             baseItems.add(itemRegistryEntry.value().getDefaultStack());
+                        }
                     }
                 }
             }
@@ -95,35 +96,34 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
                 if (ingredient != null && !ingredient.isEmpty() && baseItems.contains(ingredient)) {
                 } else {
                     tooltip.add(Text.translatable("screen.tiered.reforge_ingredient"));
-                    for (ItemStack stack : baseItems)
+                    for (ItemStack stack : baseItems) {
                         tooltip.add(stack.getName());
+                    }
                 }
             }
             if (itemStack.isDamageable() && itemStack.isDamaged()) {
                 tooltip.add(Text.translatable("screen.tiered.reforge_damaged"));
             }
             if (!tooltip.isEmpty()) {
-                this.renderTooltip(matrices, tooltip, mouseX, mouseY);
+                context.drawTooltip(this.textRenderer, tooltip, mouseX, mouseY);
             }
         }
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
-        this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         // anvil icon
-        this.drawTexture(matrices, this.x + ConfigInit.CONFIG.xIconPosition, this.y - 21 + ConfigInit.CONFIG.yIconPosition, 24, 166, 24, 25);
-        // reforge icon
-        this.drawTexture(matrices, this.x + 25 + ConfigInit.CONFIG.xIconPosition, this.y - 23 + ConfigInit.CONFIG.yIconPosition, 72, 166, 24, 27);
+        context.drawTexture(TEXTURE, this.x + ConfigInit.CONFIG.xIconPosition, this.y - 21 + ConfigInit.CONFIG.yIconPosition, 24, 166, 24, 25);
+        // context icon
+        context.drawTexture(TEXTURE, this.x + 25 + ConfigInit.CONFIG.xIconPosition, this.y - 23 + ConfigInit.CONFIG.yIconPosition, 72, 166, 24, 27);
 
-        if (this.isPointWithinBounds(0 + ConfigInit.CONFIG.xIconPosition, -21 + ConfigInit.CONFIG.yIconPosition, 24, 21, (double) mouseX, (double) mouseY))
-            this.renderTooltip(matrices, Text.translatable("container.repair"), mouseX, mouseY);
+        if (this.isPointWithinBounds(0 + ConfigInit.CONFIG.xIconPosition, -21 + ConfigInit.CONFIG.yIconPosition, 24, 21, (double) mouseX, (double) mouseY)) {
+            context.drawTooltip(this.textRenderer, Text.translatable("container.repair"), mouseX, mouseY);
+        }
     }
 
     @Override
@@ -151,14 +151,12 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
         private boolean disabled;
 
         public ReforgeButton(int x, int y, ButtonWidget.PressAction onPress) {
-            super(x, y, 18, 18, ScreenTexts.EMPTY, onPress);
+            super(x, y, 18, 18, ScreenTexts.EMPTY, onPress, DEFAULT_NARRATION_SUPPLIER);
             this.disabled = true;
         }
 
         @Override
-        public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, TEXTURE);
+        public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
             RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
@@ -169,7 +167,7 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
             } else if (this.isHovered()) {
                 j += this.width;
             }
-            this.drawTexture(matrices, this.x, this.y, j, 0, this.width, this.height);
+            context.drawTexture(TEXTURE, this.getX(), this.getY(), j, 0, this.width, this.height);
         }
 
         public void setDisabled(boolean disable) {

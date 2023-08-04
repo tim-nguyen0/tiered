@@ -68,8 +68,9 @@ public class ReforgeScreenHandler extends ScreenHandler {
     @Override
     public void onContentChanged(Inventory inventory) {
         super.onContentChanged(inventory);
-        if (!player.world.isClient && inventory == this.inventory)
+        if (!player.getWorld().isClient() && inventory == this.inventory) {
             this.updateResult();
+        }
 
     }
 
@@ -79,25 +80,27 @@ public class ReforgeScreenHandler extends ScreenHandler {
             if (ModifierUtils.getRandomAttributeIDFor(null, item, false) != null && !this.getSlot(1).getStack().isDamaged()) {
                 List<ItemStack> items = Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems(item);
                 ItemStack baseItem = this.getSlot(0).getStack();
-                if (!items.isEmpty())
-                    this.reforgeReady = items.stream().anyMatch(it -> it.isItemEqualIgnoreDamage(baseItem));
-                else if (item instanceof ToolItem toolItem)
+                if (!items.isEmpty()) {
+                    this.reforgeReady = items.stream().anyMatch(it -> it.isOf(baseItem.getItem()));
+                } else if (item instanceof ToolItem toolItem) {
                     this.reforgeReady = toolItem.getMaterial().getRepairIngredient().test(baseItem);
-                else if (item instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null)
+                } else if (item instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null) {
                     this.reforgeReady = armorItem.getMaterial().getRepairIngredient().test(baseItem);
-                else
+                } else {
                     this.reforgeReady = baseItem.isIn(TieredItemTags.REFORGE_BASE_ITEM);
-
-            } else
+                }
+            } else {
                 this.reforgeReady = false;
-        } else
+            }
+        } else {
             this.reforgeReady = false;
+        }
         TieredServerPacket.writeS2CReforgeReadyPacket((ServerPlayerEntity) player, !this.reforgeReady);
     }
 
     @Override
-    public void close(PlayerEntity player) {
-        super.close(player);
+    public void onClosed(PlayerEntity player) {
+        super.onClosed(player);
         this.context.run((world, pos) -> this.dropInventory(player, this.inventory));
     }
 
@@ -109,7 +112,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity player, int index) {
+    public ItemStack quickMove(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = (Slot) this.slots.get(index);
         if (slot != null && slot.hasStack()) {
@@ -125,23 +128,29 @@ public class ReforgeScreenHandler extends ScreenHandler {
                     return ItemStack.EMPTY;
                 }
             } else if (index >= 3 && index < 39) {
-                if (itemStack.isIn(TieredItemTags.REFORGE_ADDITION) && !this.insertItem(itemStack2, 2, 3, false))
+                if (itemStack.isIn(TieredItemTags.REFORGE_ADDITION) && !this.insertItem(itemStack2, 2, 3, false)) {
                     return ItemStack.EMPTY;
+                }
                 if (this.getSlot(1).hasStack()) {
                     Item item = this.getSlot(1).getStack().getItem();
-                    if (item instanceof ToolItem toolItem && toolItem.getMaterial().getRepairIngredient().test(itemStack) && !this.insertItem(itemStack2, 0, 1, false))
+                    if (item instanceof ToolItem toolItem && toolItem.getMaterial().getRepairIngredient().test(itemStack) && !this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
+                    }
                     if (item instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null && armorItem.getMaterial().getRepairIngredient().test(itemStack)
-                            && !this.insertItem(itemStack2, 0, 1, false))
+                            && !this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
-                    if (itemStack.isIn(TieredItemTags.REFORGE_BASE_ITEM) && !this.insertItem(itemStack2, 0, 1, false))
+                    }
+                    if (itemStack.isIn(TieredItemTags.REFORGE_BASE_ITEM) && !this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
+                    }
                     List<ItemStack> items = Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems(item);
-                    if (items.stream().anyMatch(it -> it.isItemEqualIgnoreDamage(itemStack2.copy())) && !this.insertItem(itemStack2, 0, 1, false))
+                    if (items.stream().anyMatch(it -> it.isOf(itemStack2.copy().getItem())) && !this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
+                    }
                 }
-                if (ModifierUtils.getRandomAttributeIDFor(null, itemStack.getItem(), false) != null && !this.insertItem(itemStack2, 1, 2, false))
+                if (ModifierUtils.getRandomAttributeIDFor(null, itemStack.getItem(), false) != null && !this.insertItem(itemStack2, 1, 2, false)) {
                     return ItemStack.EMPTY;
+                }
             }
             if (itemStack2.isEmpty()) {
                 slot.setStack(ItemStack.EMPTY);

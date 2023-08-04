@@ -3,13 +3,14 @@ package draylar.tiered.api;
 import draylar.tiered.Tiered;
 import draylar.tiered.config.ConfigInit;
 import net.levelz.access.PlayerStatsManagerAccess;
+import net.levelz.stats.Skill;
 import net.libz.util.SortList;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +37,7 @@ public class ModifierUtils {
         // collect all valid attributes for the given item and their weights
 
         Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().forEach((id, attribute) -> {
-            if (attribute.isValid(Registry.ITEM.getId(item)) && (attribute.getWeight() > 0 || reforge)) {
+            if (attribute.isValid(Registries.ITEM.getId(item)) && (attribute.getWeight() > 0 || reforge)) {
                 potentialAttributes.add(new Identifier(attribute.getID()));
                 attributeWeights.add(reforge ? attribute.getWeight() + 1 : attribute.getWeight());
             }
@@ -60,7 +61,7 @@ public class ModifierUtils {
             for (int i = 0; i < attributeWeights.size(); i++) {
                 if (attributeWeights.get(i) > newMaxWeight / 3) {
                     attributeWeights.set(i, (int) (attributeWeights.get(i)
-                            * (1.0f - ConfigInit.CONFIG.levelz_reforge_modifier * ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("smithing"))));
+                            * (1.0f - ConfigInit.CONFIG.levelz_reforge_modifier * ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getSkillLevel(Skill.SMITHING))));
                 }
             }
         }

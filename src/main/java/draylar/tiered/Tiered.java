@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.item.v1.ModifyItemAttributeModifiersCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
@@ -22,12 +23,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -81,8 +84,8 @@ public class Tiered implements ModInitializer {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(Tiered.ATTRIBUTE_DATA_LOADER);
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(Tiered.REFORGE_ITEM_DATA_LOADER);
 
-        REFORGE_SCREEN_HANDLER_TYPE = Registry.register(Registry.SCREEN_HANDLER, "tiered",
-                new ScreenHandlerType<>((syncId, inventory) -> new ReforgeScreenHandler(syncId, inventory, ScreenHandlerContext.EMPTY)));
+        REFORGE_SCREEN_HANDLER_TYPE = Registry.register(Registries.SCREEN_HANDLER, "tiered:reforge",
+                new ScreenHandlerType<>((syncId, inventory) -> new ReforgeScreenHandler(syncId, inventory, ScreenHandlerContext.EMPTY), FeatureFlags.VANILLA_FEATURES));
 
         TieredServerPacket.init();
         // if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
@@ -213,8 +216,9 @@ public class Tiered implements ModInitializer {
                 // Check if attribute exists
                 List<String> attributeIds = new ArrayList<>();
                 Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().forEach((id, attribute) -> {
-                    if (attribute.isValid(Registry.ITEM.getId(itemStack.getItem())))
+                    if (attribute.isValid(Registries.ITEM.getId(itemStack.getItem()))) {
                         attributeIds.add(attribute.getID());
+                    }
 
                 });
                 Identifier attributeID = null;

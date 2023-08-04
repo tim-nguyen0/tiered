@@ -92,16 +92,18 @@ public abstract class ItemStackClientMixin {
                         ((boolean) collected.get(2) ? "§9(+" : "§c(") + (String) collected.get(1) + ((int) collected.get(0) > 0 ? "%)" : ")"),
                         Text.translatable(translationKey).formatted(Formatting.BLUE)));
             }
-        } else
+        } else {
             list.add((Text) text);
+        }
         return true;
     }
 
     @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 9))
     private boolean modifyTooltipTake(List<Text> list, Object text) {
         if (this.map != null && !this.map.isEmpty() && this.map.containsKey(this.translationKey)) {
-        } else
+        } else {
             list.add((Text) text);
+        }
         return true;
     }
 
@@ -112,8 +114,9 @@ public abstract class ItemStackClientMixin {
             list.add(Text.translatable("tiered.attribute.modifier.equals." + (int) collected.get(0), "§2 " + this.armorModifierFormat,
                     ((boolean) collected.get(2) ? "§2(+" : "§c(") + (String) collected.get(1) + ((int) collected.get(0) > 0 ? "%)" : ")"),
                     Text.translatable(translationKey).formatted(Formatting.DARK_GREEN)));
-        } else
+        } else {
             list.add((Text) text);
+        }
         return true;
     }
 
@@ -146,10 +149,11 @@ public abstract class ItemStackClientMixin {
         Multimap<EntityAttribute, EntityAttributeModifier> remaining = LinkedListMultimap.create();
 
         map.forEach((entityAttribute, entityAttributeModifier) -> {
-            if (!entityAttributeModifier.getName().contains("tiered"))
+            if (!entityAttributeModifier.getName().contains("tiered")) {
                 vanillaFirst.put(entityAttribute, entityAttributeModifier);
-            else
+            } else {
                 remaining.put(entityAttribute, entityAttributeModifier);
+            }
         });
 
         vanillaFirst.putAll(remaining);
@@ -164,8 +168,9 @@ public abstract class ItemStackClientMixin {
             // attempt to display attribute if it is valid
             PotentialAttribute potentialAttribute = Tiered.ATTRIBUTE_DATA_LOADER.getItemAttributes().get(tier);
 
-            if (potentialAttribute != null)
+            if (potentialAttribute != null) {
                 info.setReturnValue(Text.translatable(potentialAttribute.getID() + ".label").append(" ").append(info.getReturnValue()).setStyle(potentialAttribute.getStyle()));
+            }
         }
     }
 }

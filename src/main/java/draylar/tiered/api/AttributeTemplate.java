@@ -6,8 +6,8 @@ import draylar.tiered.Tiered;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 /**
  * Stores information on an AttributeModifier template applied to an ItemStack.
@@ -67,7 +67,7 @@ public class AttributeTemplate {
         EntityAttributeModifier cloneModifier = new EntityAttributeModifier(Tiered.MODIFIERS[slot.getArmorStandSlotId()], entityAttributeModifier.getName() + "_" + slot.getName(),
                 entityAttributeModifier.getValue(), entityAttributeModifier.getOperation());
 
-        EntityAttribute key = Registry.ATTRIBUTE.get(new Identifier(attributeTypeID));
+        EntityAttribute key = Registries.ATTRIBUTE.get(new Identifier(attributeTypeID));
         if (key == null)
             Tiered.LOGGER.warn(String.format("%s was referenced as an attribute type, but it does not exist! A data file in /tiered/item_attributes/ has an invalid type property.", attributeTypeID));
         else

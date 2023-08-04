@@ -9,12 +9,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import draylar.tiered.config.ConfigInit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.levelz.gui.InfoGui;
+import net.levelz.screen.SkillInfoScreen;
 import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
-@Mixin(InfoGui.class)
-public class InfoGuiMixin {
+@Mixin(SkillInfoScreen.class)
+public class SkillInfoScreenMixin {
 
     @ModifyVariable(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", ordinal = 0), ordinal = 0)
     private Text translatableText1Mixin(Text original) {
