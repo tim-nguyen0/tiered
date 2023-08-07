@@ -22,7 +22,7 @@ public class TieredMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!FabricLoader.getInstance().isModLoaded("levelz") && mixinClassName.contains("InfoGuiMixin"))
+        if (!FabricLoader.getInstance().isModLoaded("levelz") && mixinClassName.contains("SkillInfoScreenMixin"))
             return false;
         if (!FabricLoader.getInstance().isModLoaded("easyanvils") && mixinClassName.contains("ModAnvilScreenMixin"))
             return false;

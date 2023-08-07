@@ -27,7 +27,6 @@
     "client.DrawContextMixin",
     "client.HandledScreenMixin",
     "compat.SkillInfoScreenMixin",
-    "compat.TieredTooltipMixin",
     "compat.ModAnvilScreenMixin"
   ],
   "injectors": {

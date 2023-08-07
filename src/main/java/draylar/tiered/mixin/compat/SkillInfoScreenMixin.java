@@ -2,9 +2,14 @@ package draylar.tiered.mixin.compat;
 
 import java.text.DecimalFormat;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.At.Shift;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import draylar.tiered.config.ConfigInit;
 import net.fabricmc.api.EnvType;
@@ -16,14 +21,21 @@ import net.minecraft.text.Text;
 @Mixin(SkillInfoScreen.class)
 public class SkillInfoScreenMixin {
 
-    @ModifyVariable(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", ordinal = 0), ordinal = 0)
-    private Text translatableText1Mixin(Text original) {
-        return Text.translatable("text.tiered.smithing_info_1_1", new DecimalFormat("0.0").format(ConfigInit.CONFIG.levelz_reforge_modifier * 100));
-    }
+    @Shadow
+    @Mutable
+    @Final
+    private String title;
+    @Shadow
+    private Text translatableText1A = null;
+    @Shadow
+    private Text translatableText1B = null;
 
-    @ModifyVariable(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", ordinal = 0), ordinal = 1)
-    private Text translatableText1BMixin(Text original) {
-        return Text.translatable("text.tiered.smithing_info_1_2", new DecimalFormat("0.0").format(ConfigInit.CONFIG.levelz_reforge_modifier * 100));
+    @Inject(method = "Lnet/levelz/screen/SkillInfoScreen;init()V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0, shift = Shift.BEFORE))
+    private void initMixin(CallbackInfo info) {
+        if (title.equals("smithing")) {
+            this.translatableText1A = Text.translatable("text.tiered.smithing_info_1_1", new DecimalFormat("0.0").format(ConfigInit.CONFIG.levelz_reforge_modifier * 100));
+            this.translatableText1B = Text.translatable("text.tiered.smithing_info_1_2", new DecimalFormat("0.0").format(ConfigInit.CONFIG.levelz_reforge_modifier * 100));
+        }
     }
 
 }
