@@ -64,8 +64,10 @@ public abstract class LivingEntityMixin extends Entity {
                         if (!syncHealth) {
                             NbtCompound oldNbt = itemStack.getNbt().copy();
                             oldNbt.remove("Damage");
+                            oldNbt.remove("iced");
                             NbtCompound newNbt = newItemStack.getNbt().copy();
                             newNbt.remove("Damage");
+                            newNbt.remove("iced");
                             if (!oldNbt.equals(newNbt)) {
                                 syncHealth = true;
                             }
