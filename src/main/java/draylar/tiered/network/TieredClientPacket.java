@@ -1,6 +1,5 @@
 package draylar.tiered.network;
 
-import draylar.tiered.access.MouseAccessor;
 import draylar.tiered.reforge.ReforgeScreen;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -14,13 +13,6 @@ import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 public class TieredClientPacket {
 
     public static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(TieredServerPacket.SET_MOUSE_POSITION, (client, handler, buf, sender) -> {
-            int mouseX = buf.readInt();
-            int mouseY = buf.readInt();
-            client.execute(() -> {
-                ((MouseAccessor) client.mouse).setMousePosition(mouseX, mouseY);
-            });
-        });
         ClientPlayNetworking.registerGlobalReceiver(TieredServerPacket.REFORGE_READY, (client, handler, buf, sender) -> {
             boolean disableButton = buf.readBoolean();
             client.execute(() -> {

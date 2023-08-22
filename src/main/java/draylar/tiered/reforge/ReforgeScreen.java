@@ -6,7 +6,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import draylar.tiered.Tiered;
 import draylar.tiered.api.TieredItemTags;
-import draylar.tiered.config.ConfigInit;
 import draylar.tiered.network.TieredClientPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -115,15 +114,6 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
         context.drawTexture(TEXTURE, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
-
-        // anvil icon
-        context.drawTexture(TEXTURE, this.x + ConfigInit.CONFIG.xIconPosition, this.y - 21 + ConfigInit.CONFIG.yIconPosition, 24, 166, 24, 25);
-        // context icon
-        context.drawTexture(TEXTURE, this.x + 25 + ConfigInit.CONFIG.xIconPosition, this.y - 23 + ConfigInit.CONFIG.yIconPosition, 72, 166, 24, 27);
-
-        if (this.isPointWithinBounds(0 + ConfigInit.CONFIG.xIconPosition, -21 + ConfigInit.CONFIG.yIconPosition, 24, 21, (double) mouseX, (double) mouseY)) {
-            context.drawTooltip(this.textRenderer, Text.translatable("container.repair"), mouseX, mouseY);
-        }
     }
 
     @Override
@@ -132,14 +122,6 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
 
     @Override
     public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.client != null && this.isPointWithinBounds(0 + ConfigInit.CONFIG.xIconPosition, -21 + ConfigInit.CONFIG.yIconPosition, 24, 21, (double) mouseX, (double) mouseY))
-            TieredClientPacket.writeC2SScreenPacket((int) this.client.mouse.getX(), (int) this.client.mouse.getY(), false);
-
-        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

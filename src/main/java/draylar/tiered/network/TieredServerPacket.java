@@ -4,6 +4,7 @@ import draylar.tiered.access.AnvilScreenHandlerAccess;
 import draylar.tiered.reforge.ReforgeScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.libz.network.LibzServerPacket;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.screen.AnvilScreenHandler;
@@ -19,7 +20,6 @@ public class TieredServerPacket {
     public static final Identifier SET_SCREEN = new Identifier("tiered", "set_screen");
     public static final Identifier REFORGE_READY = new Identifier("tiered", "reforge_ready");
     public static final Identifier REFORGE = new Identifier("tiered", "reforge");
-    public static final Identifier SET_MOUSE_POSITION = new Identifier("tiered", "set_mouse_position");
     public static final Identifier HEALTH = new Identifier("tiered", "health");
 
     public static void init() {
@@ -40,7 +40,7 @@ public class TieredServerPacket {
                             return new AnvilScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(playerx.getWorld(), pos));
                         }, Text.translatable("container.repair")));
 
-                    writeS2CMousePositionPacket(player, mouseX, mouseY);
+                    LibzServerPacket.writeS2CMousePositionPacket(player, mouseX, mouseY);
                 });
             }
         });
@@ -63,14 +63,6 @@ public class TieredServerPacket {
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         buf.writeBoolean(disableButton);
         CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(REFORGE_READY, buf);
-        serverPlayerEntity.networkHandler.sendPacket(packet);
-    }
-
-    private static void writeS2CMousePositionPacket(ServerPlayerEntity serverPlayerEntity, int mouseX, int mouseY) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeInt(mouseX);
-        buf.writeInt(mouseY);
-        CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(SET_MOUSE_POSITION, buf);
         serverPlayerEntity.networkHandler.sendPacket(packet);
     }
 
