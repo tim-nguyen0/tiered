@@ -18,7 +18,8 @@
         "amount": -3
       },
       "optional_equipment_slots": [
-        "MAINHAND"
+        "MAINHAND",
+        "OFFHAND"
       ]
     }
   ]

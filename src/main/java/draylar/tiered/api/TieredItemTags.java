@@ -5,11 +5,11 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
-//Since v1.0.3 unused cause of AutoTag usage
 public class TieredItemTags {
 
     public static final TagKey<Item> REFORGE_ADDITION = register("reforge_addition");
     public static final TagKey<Item> REFORGE_BASE_ITEM = register("reforge_base_item");
+    public static final TagKey<Item> MAIN_OFFHAND_ITEM = register("main_offhand_item");
 
     private TieredItemTags() {
     }

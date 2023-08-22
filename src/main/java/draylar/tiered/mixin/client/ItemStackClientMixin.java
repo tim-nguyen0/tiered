@@ -173,4 +173,18 @@ public abstract class ItemStackClientMixin {
             }
         }
     }
+
+    // Could inject into add line to change "main hand" text
+    @Inject(method = "getTooltip", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/ItemStack;getAttributeModifiers(Lnet/minecraft/entity/EquipmentSlot;)Lcom/google/common/collect/Multimap;"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void getTooltipMix(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> info, List list, MutableText mutableText, int i, EquipmentSlot var6[], int var7,
+            int var8, EquipmentSlot equipmentSlot, Multimap multimap) {
+        if (!multimap.isEmpty() && equipmentSlot == EquipmentSlot.OFFHAND && this.getAttributeModifiers(EquipmentSlot.MAINHAND) != null) {
+            multimap.clear();
+        }
+    }
+
+    @Shadow
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+        return null;
+    }
 }

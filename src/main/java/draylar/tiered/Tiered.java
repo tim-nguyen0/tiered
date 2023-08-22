@@ -15,11 +15,11 @@ import net.fabricmc.fabric.api.item.v1.ModifyItemAttributeModifiersCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -169,9 +169,9 @@ public class Tiered implements ModInitializer {
             ArmorItem item = (ArmorItem) stack.getItem();
             return item.getSlotType().equals(slot);
         }
-        if (stack.getItem() instanceof ShieldItem)
+        if (stack.getItem() instanceof ShieldItem || stack.getItem() instanceof RangedWeaponItem || stack.isIn(TieredItemTags.MAIN_OFFHAND_ITEM)) {
             return slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND;
-
+        }
         return slot == EquipmentSlot.MAINHAND;
     }
 
