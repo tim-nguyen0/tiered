@@ -59,20 +59,19 @@ public class AttributeHelper {
 
     public static float getExtraCritDamage(PlayerEntity playerEntity, float oldDamage) {
         EntityAttributeInstance instance = playerEntity.getAttributeInstance(CustomEntityAttributes.CRIT_CHANCE);
-        float customChance = 0.0f;
         if (instance != null) {
+            float customChance = 0.0f;
             for (EntityAttributeModifier modifier : instance.getModifiers()) {
                 customChance += (float) modifier.getValue();
             }
-        }
-        if (playerEntity.getWorld().getRandom().nextFloat() > (1.0f - Math.abs(customChance))) {
-            float extraCrit = oldDamage;
-            if (customChance < 0.0f) {
-                extraCrit = extraCrit / 2.0f;
+            if (playerEntity.getWorld().getRandom().nextFloat() > (1.0f - Math.abs(customChance))) {
+                float extraCrit = oldDamage;
+                if (customChance < 0.0f) {
+                    extraCrit = extraCrit / 2.0f;
+                }
+                return oldDamage + Math.min(customChance > 0.0f ? extraCrit : -extraCrit, Integer.MAX_VALUE);
             }
-            return Math.min(customChance > 0.0f ? extraCrit : -extraCrit, Integer.MAX_VALUE);
         }
-
         return oldDamage;
     }
 
