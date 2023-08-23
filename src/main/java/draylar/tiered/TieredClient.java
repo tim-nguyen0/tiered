@@ -2,9 +2,7 @@ package draylar.tiered;
 
 import draylar.tiered.api.BorderTemplate;
 import draylar.tiered.api.PotentialAttribute;
-import draylar.tiered.api.ReforgeItem;
 import draylar.tiered.data.AttributeDataLoader;
-import draylar.tiered.data.ReforgeItemDataLoader;
 import draylar.tiered.data.TooltipBorderLoader;
 import draylar.tiered.network.TieredClientPacket;
 import draylar.tiered.reforge.ReforgeScreen;
@@ -20,6 +18,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.libz.registry.TabRegistry;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -34,7 +34,6 @@ public class TieredClient implements ClientModInitializer {
 
     // map for storing attributes before logging into a server
     public static final Map<Identifier, PotentialAttribute> CACHED_ATTRIBUTES = new HashMap<>();
-    public static final List<ReforgeItem> CACHED_REFORGE_ITEM = new ArrayList<>();
 
     public static final List<BorderTemplate> BORDER_TEMPLATES = new ArrayList<BorderTemplate>();
 
@@ -72,17 +71,27 @@ public class TieredClient implements ClientModInitializer {
 
     public static void registerReforgeItemSyncHandler() {
         ClientPlayNetworking.registerGlobalReceiver(Tiered.REFORGE_ITEM_SYNC_PACKET, (client, play, packet, packetSender) -> {
-            // save old attributes
-            CACHED_REFORGE_ITEM.clear();
-            CACHED_REFORGE_ITEM.addAll(Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems());
-            Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems().clear();
-
-            // for each id/attribute pair, load it
-            int size = packet.readInt();
-            for (int i = 0; i < size; i++) {
-                ReforgeItem reforgeItem = ReforgeItemDataLoader.GSON.fromJson(packet.readString(), ReforgeItem.class);
-                Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems().add(reforgeItem);
+            List<Identifier> identifiers = new ArrayList<Identifier>();
+            List<List<Integer>> list = new ArrayList<List<Integer>>();
+            while (packet.isReadable()) {
+                int count = packet.readInt();
+                identifiers.add(packet.readIdentifier());
+                List<Integer> idList = new ArrayList<Integer>();
+                for (int i = 0; i < count; i++) {
+                    idList.add(packet.readInt());
+                }
+                list.add(idList);
             }
+            client.execute(() -> {
+                Tiered.REFORGE_DATA_LOADER.clearReforgeBaseItemStacks();
+                for (int i = 0; i < identifiers.size(); i++) {
+                    List<ItemStack> stacks = new ArrayList<ItemStack>();
+                    for (int u = 0; u < list.get(i).size(); u++) {
+                        stacks.add(Registries.ITEM.get(list.get(i).get(u)).getDefaultStack());
+                    }
+                    Tiered.REFORGE_DATA_LOADER.putReforgeBaseItemStacks(identifiers.get(i), stacks);
+                }
+            });
         });
     }
 }

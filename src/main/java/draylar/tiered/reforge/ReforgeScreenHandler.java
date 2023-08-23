@@ -78,7 +78,8 @@ public class ReforgeScreenHandler extends ScreenHandler {
         if (this.getSlot(0).hasStack() && this.getSlot(1).hasStack() && this.getSlot(2).hasStack()) {
             Item item = this.getSlot(1).getStack().getItem();
             if (ModifierUtils.getRandomAttributeIDFor(null, item, false) != null && !this.getSlot(1).getStack().isDamaged()) {
-                List<ItemStack> items = Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems(item);
+
+                List<ItemStack> items = Tiered.REFORGE_DATA_LOADER.getReforgeBaseItemStacks(item);
                 ItemStack baseItem = this.getSlot(0).getStack();
                 if (!items.isEmpty()) {
                     this.reforgeReady = items.stream().anyMatch(it -> it.isOf(baseItem.getItem()));
@@ -143,7 +144,7 @@ public class ReforgeScreenHandler extends ScreenHandler {
                     if (itemStack.isIn(TieredItemTags.REFORGE_BASE_ITEM) && !this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                    List<ItemStack> items = Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems(item);
+                    List<ItemStack> items = Tiered.REFORGE_DATA_LOADER.getReforgeBaseItemStacks(item);
                     if (items.stream().anyMatch(it -> it.isOf(itemStack2.copy().getItem())) && !this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }

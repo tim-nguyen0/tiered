@@ -4,7 +4,7 @@ import draylar.tiered.api.*;
 import draylar.tiered.command.CommandInit;
 import draylar.tiered.config.ConfigInit;
 import draylar.tiered.data.AttributeDataLoader;
-import draylar.tiered.data.ReforgeItemDataLoader;
+import draylar.tiered.data.ReforgeDataLoader;
 import draylar.tiered.network.TieredServerPacket;
 import draylar.tiered.reforge.ReforgeScreenHandler;
 import io.netty.buffer.Unpooled;
@@ -51,7 +51,7 @@ public class Tiered implements ModInitializer {
     /**
      * data/tiered/reforge_item
      */
-    public static final ReforgeItemDataLoader REFORGE_ITEM_DATA_LOADER = new ReforgeItemDataLoader();
+    public static final ReforgeDataLoader REFORGE_DATA_LOADER = new ReforgeDataLoader();
 
     public static ScreenHandlerType<ReforgeScreenHandler> REFORGE_SCREEN_HANDLER_TYPE;
 
@@ -82,7 +82,7 @@ public class Tiered implements ModInitializer {
         registerAttributeSyncer();
         registerReforgeItemSyncer();
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(Tiered.ATTRIBUTE_DATA_LOADER);
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(Tiered.REFORGE_ITEM_DATA_LOADER);
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(Tiered.REFORGE_DATA_LOADER);
 
         REFORGE_SCREEN_HANDLER_TYPE = Registry.register(Registries.SCREEN_HANDLER, "tiered:reforge",
                 new ScreenHandlerType<>((syncId, inventory) -> new ReforgeScreenHandler(syncId, inventory, ScreenHandlerContext.EMPTY), FeatureFlags.VANILLA_FEATURES));
@@ -196,14 +196,18 @@ public class Tiered implements ModInitializer {
     public static void registerReforgeItemSyncer() {
         ServerPlayConnectionEvents.JOIN.register((network, packetSender, minecraftServer) -> {
             PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
-            packet.writeInt(REFORGE_ITEM_DATA_LOADER.getReforgeItems().size());
+            REFORGE_DATA_LOADER.getReforgeIdentifiers().forEach(id -> {
 
-            // write each value
-            REFORGE_ITEM_DATA_LOADER.getReforgeItems().forEach(reforgeItem -> {
-                packet.writeString(ReforgeItemDataLoader.GSON.toJson(reforgeItem));
+                List<Integer> list = new ArrayList<Integer>();
+                REFORGE_DATA_LOADER.getReforgeBaseItemStacks(Registries.ITEM.get(id)).forEach(stack -> {
+                    list.add(Registries.ITEM.getRawId(stack.getItem()));
+                });
+                packet.writeInt(list.size());
+                packet.writeIdentifier(id);
+                list.forEach(rawId -> {
+                    packet.writeInt(rawId);
+                });
             });
-
-            // send packet with attributes to client
             packetSender.sendPacket(REFORGE_ITEM_SYNC_PACKET, packet);
         });
     }

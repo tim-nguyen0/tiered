@@ -75,7 +75,7 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
                 if (itemStack != last) {
                     last = itemStack;
                     baseItems = new ArrayList<ItemStack>();
-                    List<ItemStack> items = Tiered.REFORGE_ITEM_DATA_LOADER.getReforgeItems(itemStack.getItem());
+                    List<ItemStack> items = Tiered.REFORGE_DATA_LOADER.getReforgeBaseItemStacks(itemStack.getItem());
                     if (!items.isEmpty()) {
                         baseItems.addAll(items);
                     } else if (itemStack.getItem() instanceof ToolItem toolItem) {
