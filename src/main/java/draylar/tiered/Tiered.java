@@ -17,7 +17,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ArmorItem;
+import net.minecraft.item.Equipment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.item.ShieldItem;
@@ -165,8 +165,8 @@ public class Tiered implements ModInitializer {
     }
 
     public static boolean isPreferredEquipmentSlot(ItemStack stack, EquipmentSlot slot) {
-        if (stack.getItem() instanceof ArmorItem) {
-            ArmorItem item = (ArmorItem) stack.getItem();
+        if (stack.getItem() instanceof Equipment) {
+            Equipment item = (Equipment) stack.getItem();
             return item.getSlotType().equals(slot);
         }
         if (stack.getItem() instanceof ShieldItem || stack.getItem() instanceof RangedWeaponItem || stack.isIn(TieredItemTags.MAIN_OFFHAND_ITEM)) {

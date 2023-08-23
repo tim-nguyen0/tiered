@@ -34,6 +34,11 @@
   "tiered:common_shield_3.label": "Common",
   "tiered:common_shield_4.label": "Common",
 
+  "tiered:common_elytra_1.label": "Common",
+  "tiered:common_elytra_2.label": "Common",
+  "tiered:common_elytra_3.label": "Common",
+  "tiered:common_elytra_4.label": "Common",
+
   "tiered:uncommon_armor_1.label": "Uncommon",
   "tiered:uncommon_armor_2.label": "Uncommon",
   "tiered:uncommon_armor_3.label": "Uncommon",
@@ -63,6 +68,11 @@
   "tiered:uncommon_shield_2.label": "Uncommon",
   "tiered:uncommon_shield_3.label": "Uncommon",
   "tiered:uncommon_shield_4.label": "Uncommon",
+
+  "tiered:uncommon_elytra_1.label": "Uncommon",
+  "tiered:uncommon_elytra_2.label": "Uncommon",
+  "tiered:uncommon_elytra_3.label": "Uncommon",
+  "tiered:uncommon_elytra_4.label": "Uncommon",
 
   "tiered:rare_armor_1.label": "Rare",
   "tiered:rare_armor_2.label": "Rare",
@@ -94,6 +104,11 @@
   "tiered:rare_shield_3.label": "Rare",
   "tiered:rare_shield_4.label": "Rare",
 
+  "tiered:rare_elytra_1.label": "Rare",
+  "tiered:rare_elytra_2.label": "Rare",
+  "tiered:rare_elytra_3.label": "Rare",
+  "tiered:rare_elytra_4.label": "Rare",
+
   "tiered:epic_armor_1.label": "Epic",
   "tiered:epic_armor_2.label": "Epic",
   "tiered:epic_armor_3.label": "Epic",
@@ -123,6 +138,11 @@
   "tiered:epic_shield_2.label": "Epic",
   "tiered:epic_shield_3.label": "Epic",
   "tiered:epic_shield_4.label": "Epic",
+
+  "tiered:epic_elytra_1.label": "Epic",
+  "tiered:epic_elytra_2.label": "Epic",
+  "tiered:epic_elytra_3.label": "Epic",
+  "tiered:epic_elytra_4.label": "Epic",
 
   "tiered:legendary_armor_1.label": "Legendary",
   "tiered:legendary_armor_2.label": "Legendary",
@@ -154,6 +174,11 @@
   "tiered:legendary_shield_3.label": "Legendary",
   "tiered:legendary_shield_4.label": "Legendary",
 
+  "tiered:legendary_elytra_1.label": "Legendary",
+  "tiered:legendary_elytra_2.label": "Legendary",
+  "tiered:legendary_elytra_3.label": "Legendary",
+  "tiered:legendary_elytra_4.label": "Legendary",
+
   "tiered:unique_armor_1.label": "Unique",
   "tiered:unique_armor_2.label": "Unique",
   "tiered:unique_armor_3.label": "Unique",
@@ -183,6 +208,11 @@
   "tiered:unique_shield_2.label": "Unique",
   "tiered:unique_shield_3.label": "Unique",
   "tiered:unique_shield_4.label": "Unique",
+
+  "tiered:unique_elytra_1.label": "Unique",
+  "tiered:unique_elytra_2.label": "Unique",
+  "tiered:unique_elytra_3.label": "Unique",
+  "tiered:unique_elytra_4.label": "Unique",
 
   "tiered:common.label": "Common",
   "tiered:uncommon.label": "Uncommon",
