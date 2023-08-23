@@ -174,13 +174,22 @@ public abstract class ItemStackClientMixin {
         }
     }
 
-    // Could inject into add line to change "main hand" text
     @Inject(method = "getTooltip", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/ItemStack;getAttributeModifiers(Lnet/minecraft/entity/EquipmentSlot;)Lcom/google/common/collect/Multimap;"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void getTooltipMix(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> info, List list, MutableText mutableText, int i, EquipmentSlot var6[], int var7,
             int var8, EquipmentSlot equipmentSlot, Multimap multimap) {
-        if (this.isTiered && !multimap.isEmpty() && equipmentSlot == EquipmentSlot.OFFHAND && this.getAttributeModifiers(EquipmentSlot.MAINHAND) != null) {
+        if (this.isTiered && !multimap.isEmpty() && equipmentSlot == EquipmentSlot.OFFHAND && this.getAttributeModifiers(EquipmentSlot.MAINHAND) != null
+                && !this.getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()) {
             multimap.clear();
         }
+    }
+
+    @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 6), require = 0)
+    private boolean modifyTooltipEquipmentSlot(List<Text> list, Object text) {
+        if (this.isTiered && this.getAttributeModifiers(EquipmentSlot.MAINHAND) != null && !this.getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()
+                && this.getAttributeModifiers(EquipmentSlot.OFFHAND) != null && !this.getAttributeModifiers(EquipmentSlot.OFFHAND).isEmpty()) {
+            return list.add(Text.translatable("item.modifiers.hand").formatted(Formatting.GRAY));
+        }
+        return list.add((Text) text);
     }
 
     @Shadow

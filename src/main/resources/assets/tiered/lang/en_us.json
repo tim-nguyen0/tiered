@@ -253,6 +253,8 @@
   "tiered.attribute.modifier.equals.1": "%s %s %s",
   "tiered.attribute.modifier.equals.2": "%s %s %s",
 
+  "item.modifiers.hand": "When in Hand:",
+
   "commands.tiered.failed": "Nothing changed. Targets main hand is empty",
   "commands.tiered.untier_failed": "Nothing changed. %s from %s has no tier",
   "commands.tiered.untier": "Untiered %s from %s",
