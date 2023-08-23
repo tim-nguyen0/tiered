@@ -18,7 +18,8 @@
     "CrossbowItemMixin",
     "ItemFrameEntityMixin",
     "MobEntityMixin",
-    "ArmorStandEntityMixin"
+    "ArmorStandEntityMixin",
+    "ArmorItemMixin"
   ],
   "client": [
     "client.ItemStackClientMixin",

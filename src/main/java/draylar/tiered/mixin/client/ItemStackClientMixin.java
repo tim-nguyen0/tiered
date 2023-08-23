@@ -60,6 +60,7 @@ public abstract class ItemStackClientMixin {
     private String translationKey;
     private String armorModifierFormat;
     private Map<String, ArrayList> map = new HashMap<>();
+    private boolean toughnessZero = false;
 
     @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 6), locals = LocalCapture.CAPTURE_FAILHARD)
     private void storeTooltipInformation(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List> info, List list, MutableText mutableText, int i, EquipmentSlot var6[], int var7,
@@ -130,6 +131,27 @@ public abstract class ItemStackClientMixin {
                 entityAttributeModifier.getOperation() == EntityAttributeModifier.Operation.MULTIPLY_BASE || entityAttributeModifier.getOperation() == EntityAttributeModifier.Operation.MULTIPLY_TOTAL
                         ? d * 100.0
                         : (entry.getKey().equals(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) ? d * 10.0 : d));
+
+        // special case
+        if (entry.getKey().equals(EntityAttributes.GENERIC_ARMOR_TOUGHNESS)) {
+            if (this.isTiered) {
+                if (this.toughnessZero) {
+                    ArrayList collected = map.get(translationKey);
+                    // plus
+                    if ((boolean) collected.get(2)) {
+                        list.add(Text.translatable("tiered.attribute.modifier.plus." + (int) collected.get(0), "§9+" + this.armorModifierFormat,
+                                Text.translatable(translationKey).formatted(Formatting.BLUE), ""));
+                    } else {
+                        // take
+                        list.add(Text.translatable("tiered.attribute.modifier.take." + (int) collected.get(0), "§c" + this.armorModifierFormat,
+                                Text.translatable(translationKey).formatted(Formatting.RED), ""));
+                    }
+                }
+            } else {
+                this.toughnessZero = entityAttributeModifier.getValue() < 0.0001D;
+            }
+        }
+
     }
 
     @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/MutableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 2))
@@ -183,6 +205,7 @@ public abstract class ItemStackClientMixin {
         }
     }
 
+    // this has require = 0!
     @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 6), require = 0)
     private boolean modifyTooltipEquipmentSlot(List<Text> list, Object text) {
         if (this.isTiered && this.getAttributeModifiers(EquipmentSlot.MAINHAND) != null && !this.getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()
