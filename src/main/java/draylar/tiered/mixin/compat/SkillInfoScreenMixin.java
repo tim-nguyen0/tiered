@@ -33,8 +33,8 @@ public class SkillInfoScreenMixin {
     @Inject(method = "Lnet/levelz/screen/SkillInfoScreen;init()V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0, shift = Shift.BEFORE))
     private void initMixin(CallbackInfo info) {
         if (title.equals("smithing")) {
-            this.translatableText1A = Text.translatable("text.tiered.smithing_info_1_1", new DecimalFormat("0.0").format(ConfigInit.CONFIG.levelz_reforge_modifier * 100));
-            this.translatableText1B = Text.translatable("text.tiered.smithing_info_1_2", new DecimalFormat("0.0").format(ConfigInit.CONFIG.levelz_reforge_modifier * 100));
+            this.translatableText1A = Text.translatable("text.tiered.smithing_info_1_1", new DecimalFormat("0.0").format(ConfigInit.CONFIG.levelzReforgeModifier * 100));
+            this.translatableText1B = Text.translatable("text.tiered.smithing_info_1_2", new DecimalFormat("0.0").format(ConfigInit.CONFIG.levelzReforgeModifier * 100));
         }
     }
 

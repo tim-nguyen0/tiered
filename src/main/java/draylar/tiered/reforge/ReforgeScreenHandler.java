@@ -18,6 +18,7 @@ import net.minecraft.world.WorldEvents;
 import draylar.tiered.Tiered;
 import draylar.tiered.api.ModifierUtils;
 import draylar.tiered.api.TieredItemTags;
+import draylar.tiered.config.ConfigInit;
 import draylar.tiered.network.TieredServerPacket;
 
 import java.util.List;
@@ -79,10 +80,10 @@ public class ReforgeScreenHandler extends ScreenHandler {
             Item item = this.getSlot(1).getStack().getItem();
             if (ModifierUtils.getRandomAttributeIDFor(null, item, false) != null && !this.getSlot(1).getStack().isDamaged()) {
 
-                List<ItemStack> items = Tiered.REFORGE_DATA_LOADER.getReforgeBaseItemStacks(item);
+                List<Item> items = Tiered.REFORGE_DATA_LOADER.getReforgeBaseItems(item);
                 ItemStack baseItem = this.getSlot(0).getStack();
                 if (!items.isEmpty()) {
-                    this.reforgeReady = items.stream().anyMatch(it -> it.isOf(baseItem.getItem()));
+                    this.reforgeReady = items.stream().anyMatch(it -> it == baseItem.getItem());
                 } else if (item instanceof ToolItem toolItem) {
                     this.reforgeReady = toolItem.getMaterial().getRepairIngredient().test(baseItem);
                 } else if (item instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null) {
@@ -94,6 +95,10 @@ public class ReforgeScreenHandler extends ScreenHandler {
                 this.reforgeReady = false;
             }
         } else {
+            this.reforgeReady = false;
+        }
+        if (this.reforgeReady && !ConfigInit.CONFIG.uniqueReforge && ModifierUtils.getAttributeID(this.getSlot(1).getStack()) != null
+                && ModifierUtils.getAttributeID(this.getSlot(1).getStack()).getPath().contains("unique")) {
             this.reforgeReady = false;
         }
         TieredServerPacket.writeS2CReforgeReadyPacket((ServerPlayerEntity) player, !this.reforgeReady);
@@ -144,8 +149,8 @@ public class ReforgeScreenHandler extends ScreenHandler {
                     if (itemStack.isIn(TieredItemTags.REFORGE_BASE_ITEM) && !this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                    List<ItemStack> items = Tiered.REFORGE_DATA_LOADER.getReforgeBaseItemStacks(item);
-                    if (items.stream().anyMatch(it -> it.isOf(itemStack2.copy().getItem())) && !this.insertItem(itemStack2, 0, 1, false)) {
+                    List<Item> items = Tiered.REFORGE_DATA_LOADER.getReforgeBaseItems(item);
+                    if (items.stream().anyMatch(it -> it == itemStack2.copy().getItem()) && !this.insertItem(itemStack2, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
                 }

@@ -5,7 +5,9 @@ import java.util.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import draylar.tiered.Tiered;
+import draylar.tiered.api.ModifierUtils;
 import draylar.tiered.api.TieredItemTags;
+import draylar.tiered.config.ConfigInit;
 import draylar.tiered.network.TieredClientPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,7 +35,7 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
     public static final Identifier TEXTURE = new Identifier("tiered", "textures/gui/reforging_screen.png");
     public ReforgeScreen.ReforgeButton reforgeButton;
     private ItemStack last;
-    private List<ItemStack> baseItems;
+    private List<Item> baseItems;
 
     public ReforgeScreen(ReforgeScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title);
@@ -74,17 +76,22 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
             } else {
                 if (itemStack != last) {
                     last = itemStack;
-                    baseItems = new ArrayList<ItemStack>();
-                    List<ItemStack> items = Tiered.REFORGE_DATA_LOADER.getReforgeBaseItemStacks(itemStack.getItem());
+                    baseItems = new ArrayList<Item>();
+                    List<Item> items = Tiered.REFORGE_DATA_LOADER.getReforgeBaseItems(itemStack.getItem());
                     if (!items.isEmpty()) {
                         baseItems.addAll(items);
                     } else if (itemStack.getItem() instanceof ToolItem toolItem) {
-                        baseItems.addAll(Arrays.asList(toolItem.getMaterial().getRepairIngredient().getMatchingStacks()));
+                        toolItem.getMaterial().getRepairIngredient().getMatchingStacks();
+                        for (int i = 0; i < toolItem.getMaterial().getRepairIngredient().getMatchingStacks().length; i++) {
+                            baseItems.add(toolItem.getMaterial().getRepairIngredient().getMatchingStacks()[i].getItem());
+                        }
                     } else if (itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial().getRepairIngredient() != null) {
-                        baseItems.addAll(Arrays.asList(armorItem.getMaterial().getRepairIngredient().getMatchingStacks()));
+                        for (int i = 0; i < armorItem.getMaterial().getRepairIngredient().getMatchingStacks().length; i++) {
+                            baseItems.add(armorItem.getMaterial().getRepairIngredient().getMatchingStacks()[i].getItem());
+                        }
                     } else {
                         for (RegistryEntry<Item> itemRegistryEntry : Registries.ITEM.getOrCreateEntryList(TieredItemTags.REFORGE_BASE_ITEM)) {
-                            baseItems.add(itemRegistryEntry.value().getDefaultStack());
+                            baseItems.add(itemRegistryEntry.value());
                         }
                     }
                 }
@@ -92,11 +99,11 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
             List<Text> tooltip = new ArrayList<Text>();
             if (!baseItems.isEmpty()) {
                 ItemStack ingredient = this.getScreenHandler().getSlot(0).getStack();
-                if (ingredient != null && !ingredient.isEmpty() && baseItems.contains(ingredient)) {
+                if (ingredient != null && !ingredient.isEmpty() && baseItems.contains(ingredient.getItem())) {
                 } else {
                     tooltip.add(Text.translatable("screen.tiered.reforge_ingredient"));
-                    for (ItemStack stack : baseItems) {
-                        tooltip.add(stack.getName());
+                    for (Item item : baseItems) {
+                        tooltip.add(item.getName());
                     }
                 }
             }
@@ -106,6 +113,10 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
             if (!tooltip.isEmpty()) {
                 context.drawTooltip(this.textRenderer, tooltip, mouseX, mouseY);
             }
+        }
+        if (!ConfigInit.CONFIG.uniqueReforge && !this.getScreenHandler().getSlot(1).getStack().isEmpty() && ModifierUtils.getAttributeID(this.getScreenHandler().getSlot(1).getStack()) != null
+                && ModifierUtils.getAttributeID(this.getScreenHandler().getSlot(1).getStack()).getPath().contains("unique")) {
+            context.drawTexture(TEXTURE, this.x + 74, this.y + 29, 0, 166, 28, 26);
         }
     }
 

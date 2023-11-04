@@ -51,7 +51,7 @@ public class ModifierUtils {
             int maxWeight = attributeWeights.get(attributeWeights.size() - 1);
             for (int i = 0; i < attributeWeights.size(); i++) {
                 if (attributeWeights.get(i) > maxWeight / 2) {
-                    attributeWeights.set(i, (int) (attributeWeights.get(i) * ConfigInit.CONFIG.reforge_modifier));
+                    attributeWeights.set(i, (int) (attributeWeights.get(i) * ConfigInit.CONFIG.reforgeModifier));
                 }
             }
         }
@@ -61,7 +61,7 @@ public class ModifierUtils {
             for (int i = 0; i < attributeWeights.size(); i++) {
                 if (attributeWeights.get(i) > newMaxWeight / 3) {
                     attributeWeights.set(i, (int) (attributeWeights.get(i)
-                            * (1.0f - ConfigInit.CONFIG.levelz_reforge_modifier * ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getSkillLevel(Skill.SMITHING))));
+                            * (1.0f - ConfigInit.CONFIG.levelzReforgeModifier * ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getSkillLevel(Skill.SMITHING))));
                 }
             }
         }
@@ -70,7 +70,7 @@ public class ModifierUtils {
             int luckMaxWeight = Collections.max(attributeWeights);
             for (int i = 0; i < attributeWeights.size(); i++) {
                 if (attributeWeights.get(i) > luckMaxWeight / 3) {
-                    attributeWeights.set(i, (int) (attributeWeights.get(i) * (1.0f - ConfigInit.CONFIG.luck_reforge_modifier * playerEntity.getLuck())));
+                    attributeWeights.set(i, (int) (attributeWeights.get(i) * (1.0f - ConfigInit.CONFIG.luckReforgeModifier * playerEntity.getLuck())));
                 }
             }
         }
@@ -177,7 +177,12 @@ public class ModifierUtils {
         }
     }
 
-    private ModifierUtils() {
-        // no-op
+    @Nullable
+    public static Identifier getAttributeID(ItemStack itemStack) {
+        if (itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY) != null) {
+            return new Identifier(itemStack.getSubNbt(Tiered.NBT_SUBTAG_KEY).getString(Tiered.NBT_SUBTAG_DATA_KEY));
+        }
+        return null;
     }
+
 }

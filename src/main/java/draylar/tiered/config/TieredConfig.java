@@ -18,11 +18,12 @@ public class TieredConfig implements ConfigData {
     @Comment("Merchant items get modifiers")
     public boolean merchantModifier = true;
     @Comment("Decreases the biggest weights by this modifier")
-    public float reforge_modifier = 0.9F;
+    public float reforgeModifier = 0.9F;
     @Comment("Modify the biggest weights by this modifier per smithing level")
-    public float levelz_reforge_modifier = 0.01F;
+    public float levelzReforgeModifier = 0.01F;
     @Comment("Modify the biggest weights by this modifier per luck")
-    public float luck_reforge_modifier = 0.02F;
+    public float luckReforgeModifier = 0.02F;
+    public boolean uniqueReforge = false;
 
     @ConfigEntry.Category("client_settings")
     public boolean showReforgingTab = true;

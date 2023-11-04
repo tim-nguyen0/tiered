@@ -1,9 +1,6 @@
 ### Added:
-- 
+- Added unique non reforge config option
 ### Fixed:
-- Fixed offhand usage
-- Fixed bow damage
-- Fixed special toughness tooltip case
-- Fixed tiering item client bug
+- Fixed required material tooltip
 ### Changed:
-- Changed reforge loader
+- 

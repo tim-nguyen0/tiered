@@ -18,7 +18,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.libz.registry.TabRegistry;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
@@ -83,13 +83,13 @@ public class TieredClient implements ClientModInitializer {
                 list.add(idList);
             }
             client.execute(() -> {
-                Tiered.REFORGE_DATA_LOADER.clearReforgeBaseItemStacks();
+                Tiered.REFORGE_DATA_LOADER.clearReforgeBaseItems();
                 for (int i = 0; i < identifiers.size(); i++) {
-                    List<ItemStack> stacks = new ArrayList<ItemStack>();
+                    List<Item> items = new ArrayList<Item>();
                     for (int u = 0; u < list.get(i).size(); u++) {
-                        stacks.add(Registries.ITEM.get(list.get(i).get(u)).getDefaultStack());
+                        items.add(Registries.ITEM.get(list.get(i).get(u)));
                     }
-                    Tiered.REFORGE_DATA_LOADER.putReforgeBaseItemStacks(identifiers.get(i), stacks);
+                    Tiered.REFORGE_DATA_LOADER.putReforgeBaseItems(identifiers.get(i), items);
                 }
             });
         });

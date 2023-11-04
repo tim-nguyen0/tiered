@@ -199,8 +199,8 @@ public class Tiered implements ModInitializer {
             REFORGE_DATA_LOADER.getReforgeIdentifiers().forEach(id -> {
 
                 List<Integer> list = new ArrayList<Integer>();
-                REFORGE_DATA_LOADER.getReforgeBaseItemStacks(Registries.ITEM.get(id)).forEach(stack -> {
-                    list.add(Registries.ITEM.getRawId(stack.getItem()));
+                REFORGE_DATA_LOADER.getReforgeBaseItems(Registries.ITEM.get(id)).forEach(item -> {
+                    list.add(Registries.ITEM.getRawId(item));
                 });
                 packet.writeInt(list.size());
                 packet.writeIdentifier(id);
