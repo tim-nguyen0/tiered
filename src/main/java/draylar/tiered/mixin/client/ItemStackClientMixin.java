@@ -2,6 +2,8 @@ package draylar.tiered.mixin.client;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+
 import draylar.tiered.Tiered;
 import draylar.tiered.api.PotentialAttribute;
 import net.fabricmc.api.EnvType;
@@ -197,22 +199,24 @@ public abstract class ItemStackClientMixin {
     }
 
     @Inject(method = "getTooltip", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/ItemStack;getAttributeModifiers(Lnet/minecraft/entity/EquipmentSlot;)Lcom/google/common/collect/Multimap;"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void getTooltipMix(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> info, List list, MutableText mutableText, int i, EquipmentSlot var6[], int var7,
+    private void getTooltipMixin(PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> info, List list, MutableText mutableText, int i, EquipmentSlot var6[], int var7,
             int var8, EquipmentSlot equipmentSlot, Multimap multimap) {
         if (this.isTiered && !multimap.isEmpty() && equipmentSlot == EquipmentSlot.OFFHAND && this.getAttributeModifiers(EquipmentSlot.MAINHAND) != null
                 && !this.getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()) {
-            multimap.clear();
+            try {
+                multimap.clear();
+            } catch (UnsupportedOperationException exception) {
+            }
         }
     }
 
-    // this has require = 0!
-    @Redirect(method = "getTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 6), require = 0)
-    private boolean modifyTooltipEquipmentSlot(List<Text> list, Object text) {
+    @ModifyExpressionValue(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;)Lnet/minecraft/text/MutableText;", ordinal = 1))
+    private MutableText modifyTooltipEquipmentSlot(MutableText original) {
         if (this.isTiered && this.getAttributeModifiers(EquipmentSlot.MAINHAND) != null && !this.getAttributeModifiers(EquipmentSlot.MAINHAND).isEmpty()
                 && this.getAttributeModifiers(EquipmentSlot.OFFHAND) != null && !this.getAttributeModifiers(EquipmentSlot.OFFHAND).isEmpty()) {
-            return list.add(Text.translatable("item.modifiers.hand").formatted(Formatting.GRAY));
+            return Text.translatable("item.modifiers.hand").formatted(Formatting.GRAY);
         }
-        return list.add((Text) text);
+        return original;
     }
 
     @Shadow
