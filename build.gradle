@@ -46,6 +46,8 @@ dependencies {
 	// Autotag
 	modImplementation ("com.github.apace100:autotag-api:${autotag_version}")
 	modImplementation ("com.github.apace100:autotag:${autotag_version}")
+	// Extras
+	modCompileOnly annotationProcessor ("io.github.llamalad7:mixinextras-fabric:0.2.0")
     // LevelZ
     modCompileOnly ('maven.modrinth:levelz:1.4.10+1.20.1') {
 		exclude(group: "net.fabricmc.fabric-api")

@@ -68,9 +68,10 @@ public class AttributeTemplate {
                 entityAttributeModifier.getValue(), entityAttributeModifier.getOperation());
 
         EntityAttribute key = Registries.ATTRIBUTE.get(new Identifier(attributeTypeID));
-        if (key == null)
+        if (key == null) {
             Tiered.LOGGER.warn(String.format("%s was referenced as an attribute type, but it does not exist! A data file in /tiered/item_attributes/ has an invalid type property.", attributeTypeID));
-        else
+        } else {
             multimap.put(key, cloneModifier);
+        }
     }
 }

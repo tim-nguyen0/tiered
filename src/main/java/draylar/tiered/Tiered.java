@@ -123,8 +123,9 @@ public class Tiered implements ModInitializer {
                                 List<EquipmentSlot> optionalEquipmentSlots = new ArrayList<>(Arrays.asList(template.getOptionalEquipmentSlots()));
 
                                 // optional equipment slots are valid ONLY IF the equipment slot is valid for the thing
-                                if (optionalEquipmentSlots.contains(slot) && Tiered.isPreferredEquipmentSlot(itemStack, slot))
+                                if (optionalEquipmentSlots.contains(slot) && Tiered.isPreferredEquipmentSlot(itemStack, slot)) {
                                     template.realize(modifiers, slot);
+                                }
                             }
                         });
                     }
