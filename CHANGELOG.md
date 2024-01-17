@@ -1,6 +1,6 @@
 ### Added:
-- Added unique non reforge config option
+- 
 ### Fixed:
-- Fixed required material tooltip
+- Fixed item durability bar
 ### Changed:
 - 
