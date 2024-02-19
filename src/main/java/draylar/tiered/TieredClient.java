@@ -14,7 +14,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.libz.registry.TabRegistry;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
@@ -39,8 +38,6 @@ public class TieredClient implements ClientModInitializer {
 
     private static final Identifier ANVIL_TAB_ICON = new Identifier("tiered:textures/gui/anvil_tab_icon.png");
     private static final Identifier REFORGE_TAB_ICON = new Identifier("tiered:textures/gui/reforge_tab_icon.png");
-
-    public static final boolean isBCLibLoaded = FabricLoader.getInstance().isModLoaded("bclib");
 
     @Override
     public void onInitializeClient() {

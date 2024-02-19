@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed item durability bar
+- Fixed bclib incompat
 ### Changed:
 - 

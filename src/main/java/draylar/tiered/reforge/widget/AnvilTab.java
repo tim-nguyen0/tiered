@@ -2,13 +2,15 @@ package draylar.tiered.reforge.widget;
 
 import org.jetbrains.annotations.Nullable;
 
-import draylar.tiered.TieredClient;
 import draylar.tiered.network.TieredClientPacket;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.libz.api.InventoryTab;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+@Environment(EnvType.CLIENT)
 public class AnvilTab extends InventoryTab {
 
     public AnvilTab(Text title, @Nullable Identifier texture, int preferedPos, Class<?>... screenClasses) {
@@ -17,9 +19,7 @@ public class AnvilTab extends InventoryTab {
 
     @Override
     public void onClick(MinecraftClient client) {
-        if (!TieredClient.isBCLibLoaded) {
-            TieredClientPacket.writeC2SScreenPacket((int) client.mouse.getX(), (int) client.mouse.getY(), false);
-        }
+        TieredClientPacket.writeC2SScreenPacket((int) client.mouse.getX(), (int) client.mouse.getY(), false);
     }
 
 }
