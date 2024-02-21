@@ -81,7 +81,6 @@ public class ReforgeScreen extends HandledScreen<ReforgeScreenHandler> implement
                     if (!items.isEmpty()) {
                         baseItems.addAll(items);
                     } else if (itemStack.getItem() instanceof ToolItem toolItem) {
-                        toolItem.getMaterial().getRepairIngredient().getMatchingStacks();
                         for (int i = 0; i < toolItem.getMaterial().getRepairIngredient().getMatchingStacks().length; i++) {
                             baseItems.add(toolItem.getMaterial().getRepairIngredient().getMatchingStacks()[i].getItem());
                         }

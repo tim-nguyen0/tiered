@@ -40,6 +40,10 @@ public class ReforgeDataLoader implements SimpleSynchronousResourceReloadListene
                 JsonObject data = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
 
                 for (int u = 0; u < data.getAsJsonArray("items").size(); u++) {
+                    if (Registries.ITEM.get(new Identifier(data.getAsJsonArray("items").get(u).getAsString())).toString().equals("air")) {
+                        LOGGER.info("Resource {} was not loaded cause {} is not a valid item identifier", id.toString(), data.getAsJsonArray("items").get(u).getAsString());
+                        continue;
+                    }
                     List<Item> baseItems = new ArrayList<Item>();
                     for (int i = 0; i < data.getAsJsonArray("base").size(); i++) {
                         if (Registries.ITEM.get(new Identifier(data.getAsJsonArray("base").get(i).getAsString())).toString().equals("air")) {
@@ -48,10 +52,7 @@ public class ReforgeDataLoader implements SimpleSynchronousResourceReloadListene
                         }
                         baseItems.add(Registries.ITEM.get(new Identifier(data.getAsJsonArray("base").get(i).getAsString())));
                     }
-                    if (Registries.ITEM.get(new Identifier(data.getAsJsonArray("items").get(u).getAsString())).toString().equals("air")) {
-                        LOGGER.info("Resource {} was not loaded cause {} is not a valid item identifier", id.toString(), data.getAsJsonArray("items").get(u).getAsString());
-                        continue;
-                    }
+
                     reforgeIdentifiers.add(new Identifier(data.getAsJsonArray("items").get(u).getAsString()));
                     reforgeBaseMap.put(new Identifier(data.getAsJsonArray("items").get(u).getAsString()), baseItems);
                 }
