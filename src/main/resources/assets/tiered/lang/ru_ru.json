@@ -262,7 +262,7 @@
   
     "container.reforge": "Перековка",
     "screen.tiered.reforging_screen": "Перековка",
-    "screen.tiered.reforge_ingredient": "Требуется сырьё",
+    "screen.tiered.reforge_ingredient": "Требуется сырьё:",
     "screen.tiered.reforge_damaged": "Требуется полная прочность",
   
     "text.tiered.smithing_info_1_1": "Каждое очко навыка увеличивает удачу",
@@ -287,5 +287,5 @@
     "commands.tiered.untier": "Редкость сброшена %s с %s",
     "commands.tiered.tiering_failed": "Ничего не изменилось. %s с %s не имеет определенной редкости",
     "commands.tiered.tier": "Tiered %s from %s"
-
+    
     }
