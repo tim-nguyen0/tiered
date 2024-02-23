@@ -287,5 +287,5 @@
     "commands.tiered.untier": "Редкость сброшена %s с %s",
     "commands.tiered.tiering_failed": "Ничего не изменилось. %s с %s не имеет определенной редкости",
     "commands.tiered.tier": "Tiered %s from %s"
-  
-  }
+
+    }
