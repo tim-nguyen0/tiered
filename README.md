@@ -1,5 +1,7 @@
 # Tiered
 
+This is a personal fork of Globox_Z's fork, increasing default chances and rebalancing according to mending changes in the Ultimate Adventures modpack. 
+
 Tiered is a Fabric mod inspired by [Quality Tools](https://www.curseforge.com/minecraft/mc-mods/quality-tools). Every tool you make will have a special modifier, as seen below:
 
 <img src="resources/legendary_chestplate.png" width="400">
