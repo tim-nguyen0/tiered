@@ -38,7 +38,21 @@
             "modifier": {
                 "name": "tiered:unique_armor_1",
                 "operation": "ADDITION",
-                "amount": 2
+                "amount": 4
+            },
+            "optional_equipment_slots": [
+                "FEET",
+                "LEGS",
+                "CHEST",
+                "HEAD"
+            ]
+        },
+        {
+            "type": "tiered:generic.durable",
+            "modifier": {
+                "name": "tiered:unique_armor_3",
+                "operation": "MULTIPLY_TOTAL",
+                "amount": 0.75
             },
             "optional_equipment_slots": [
                 "FEET",
@@ -52,7 +66,7 @@
             "modifier": {
                 "name": "tiered:unique_armor_1",
                 "operation": "ADDITION",
-                "amount": 6
+                "amount": 2
             },
             "optional_equipment_slots": [
                 "FEET",
